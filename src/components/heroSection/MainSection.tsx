@@ -1,4 +1,5 @@
 import { ArrowRight, BookOpen, Calendar, Clock } from 'lucide-react'
+import Link from 'next/link'
 
 function MainSection() {
   return (
@@ -33,7 +34,8 @@ function MainSection() {
                 "Mysteriet på slottet"
               </p>
               <button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 group-hover:gap-3">
-                Se alle arrangementer
+                <Link href="/events">Se alle arrangementer</Link>
+
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>
@@ -79,7 +81,8 @@ function MainSection() {
                 </span>
               </div>
               <button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 group-hover:gap-3">
-                Bla gjennom bøker
+                <Link href="/books">Bla gjennom bøker</Link>
+
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>

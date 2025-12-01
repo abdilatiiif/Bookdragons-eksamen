@@ -1,7 +1,7 @@
 import React from 'react'
 import './styles.css'
 import { Navigation } from '@/components/navigation/Navigation'
-import { icons } from 'lucide-react'
+import Footer from '@/components/Footer'
 
 export const metadata = {
   title: 'Bookdragons',
@@ -16,6 +16,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
       <body>
         <Navigation />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   )
