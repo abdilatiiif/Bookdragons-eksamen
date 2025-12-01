@@ -70,3 +70,7 @@ If you have any issues or questions, reach out to us on [Discord](https://discor
 
 1.des
 start av payload prosjekt - git init
+
+- Laster ned tailwind, shadcn, icons
+- Mobile first utvikling
+- navbar klar desktok & mobil versjon
