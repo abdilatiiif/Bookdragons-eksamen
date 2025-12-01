@@ -16,7 +16,7 @@ import { Car, Flame, Plane, Sailboat } from 'lucide-react'
 
 export function NavigationDesktop() {
   return (
-    <NavigationMenu className="max-w-7xl pl-2 rounded-2xl hidden md:flex ">
+    <NavigationMenu className="  max-w-7xl pl-2 rounded-2xl hidden md:flex ">
       <NavigationMenuList className="">
         <NavigationMenuItem className=" md:block  ml-4 p-2 hover:bg-yellow-600 rounded-full transition-colors cursor-pointer">
           <Link href="/">
@@ -89,7 +89,7 @@ export function NavigationDesktop() {
       </NavigationMenuList>
       <Input
         placeholder="Søk etter bok..."
-        className="mx-4 bl-2 p-2 bl-2 rounded-lg bg-green-50 min-w-[140px] shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+        className=" mx-4 bl-2 p-2 bl-2 rounded-lg bg-green-50 min-w-[140px] shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
       />
     </NavigationMenu>
   )

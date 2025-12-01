@@ -21,7 +21,7 @@ import { Input } from '@/components/ui/input'
 
 export function Navigation() {
   return (
-    <div className="flex flex-row items-center justify-between h-20 ">
+    <div className="flex fixed z-50 flex-row items-center justify-between h-20 w-full">
       {/** desktop  */}
 
       <NavigationDesktop />

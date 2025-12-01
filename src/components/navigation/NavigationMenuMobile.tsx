@@ -37,7 +37,7 @@ export function NavigationMenuMobile() {
   ]
   return (
     <Sheet>
-      <SheetTrigger asChild className="md:hidden fixed top-4 right-4">
+      <SheetTrigger asChild className="md:hidden fixed z-50 top-4 right-4">
         <Menu size={40} />
       </SheetTrigger>
       <SheetContent className="overflow-y-auto">
