@@ -74,3 +74,7 @@ start av payload prosjekt - git init
 - Laster ned tailwind, shadcn, icons
 - Mobile first utvikling
 - navbar klar desktok & mobil versjon
+- hjemmesiden ferdig, og nav ferdig for desktop og mobil
+- DarkMood (ikke aktivert enda)
+
+- Oppstart av books pages.
