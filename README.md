@@ -73,8 +73,13 @@ start av payload prosjekt - git init
 
 - Laster ned tailwind, shadcn, icons
 - Mobile first utvikling
-- navbar klar desktok & mobil versjon
+- navbar klar desktop & mobil versjon
 - hjemmesiden ferdig, og nav ferdig for desktop og mobil
 - DarkMood (ikke aktivert enda)
 
 - Oppstart av books pages.
+- pages skal gjøres ferdig før, data blir hentet fra DB.
+- Oppretter collections for books
+- viser fram fra, legger inn books i DB , Seeding?
+
+-Payload anbefaler og som unngår feil, migrasjonsproblemer og databasekræsj. payload LOCAL api
