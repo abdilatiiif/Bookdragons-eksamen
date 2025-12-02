@@ -96,3 +96,10 @@ legge inn books inni i data basen:
 -pnpm payload migrate:create
 -pnpm payload migrate
 -pnpm tsx script/seed-bookdragons.tsx
+
+- Prøver å skille mellom hva er client server og action server
+- prøver å hente data fra DB for å vise inn på siden før jeg lager filter funksjon
+- Alle bøkene vises , men uten bilde - bruke random bilde basert på random ISBN nr.
+- "https://picsum.photos/400/500"
+- BUG : Z-index på knappene til filter fikset
+-

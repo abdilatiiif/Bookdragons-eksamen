@@ -11,7 +11,7 @@ import FilterSidebar from './FilterSidebar'
 
 function SideBarBtn() {
   return (
-    <Sidebar className="p-3">
+    <Sidebar className="p-3 z-20">
       <SidebarContent className="mt-20 rounded-lg shadow-lg sticky">
         <SidebarTrigger className="left-2 mt-12" />
         <SidebarGroup />
