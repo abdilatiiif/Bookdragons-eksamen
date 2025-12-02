@@ -2,7 +2,12 @@ import Book from './Book'
 import SideBarBtn from './SideBarBtn'
 import { SidebarTrigger } from '../ui/sidebar'
 
+import getBooks from '@/ACTIONS/GET/GetBooks'
+
 function BooksSection() {
+  console.log('BooksSection - server-side')
+  getBooks()
+
   return (
     <div className="py-25 px-10 flex flex-col w-full">
       <SideBarBtn />

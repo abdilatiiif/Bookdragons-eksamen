@@ -83,3 +83,16 @@ start av payload prosjekt - git init
 - viser fram fra, legger inn books i DB , Seeding?
 
 -Payload anbefaler og som unngår feil, migrasjonsproblemer og databasekræsj. payload LOCAL api
+
+2.des
+
+- lager ferdig filter componenten, både mobil og desktop
+- lager slugs books , legger til collections
+- skal lage cvs fill med data som skal importeres til databasen.
+- Sørger for at filteret og slugs databasen matcher
+- importerer csv fil også til data
+
+legge inn books inni i data basen:
+-pnpm payload migrate:create
+-pnpm payload migrate
+-pnpm tsx script/seed-bookdragons.tsx
