@@ -5,8 +5,20 @@ function Book({ book }: { book: any }) {
 
   const seed = encodeURIComponent(book?.id ?? book?.isbn ?? book?.title ?? String(Math.random()))
   const imgSrc = `https://picsum.photos/seed/${seed}/400/500`
+
+  console.log(book)
+
+  function handleClick() {
+    console.log(`Book "${book.title}" clicked!`)
+    const bookUrl = `/books/${book.id}`
+    window.location.href = bookUrl
+  }
+
   return (
-    <div className="w-80 bg-gray-50 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <div
+      onClick={() => handleClick()}
+      className="w-80 bg-gray-50 rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+    >
       <div className="relative bg-white p-8 flex justify-center items-center h-96">
         <img src={imgSrc} alt={book.title} className="h-full w-auto object-contain shadow-lg" />
 
@@ -23,16 +35,6 @@ function Book({ book }: { book: any }) {
             Få på lager
           </div>
         )}
-
-        {/* Favorite Heart Icon */}
-        <button className="absolute bottom-4 left-4 bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all">
-          <Heart />
-        </button>
-
-        {/* Add to Cart Button */}
-        <button className="absolute bottom-4 right-4 bg-white rounded-full p-3 shadow-md hover:shadow-lg transition-all">
-          <ShoppingCart />
-        </button>
       </div>
 
       {/* Book Info Section */}

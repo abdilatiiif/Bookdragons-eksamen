@@ -5,13 +5,14 @@ import configPromise from '@/payload.config'
 
 export async function getBooks(filters?: {
   genre?: string[]
-  language?: string
-  binding?: string
+  language?: string | string[]
+  binding?: string | string[]
   minPrice?: number
   maxPrice?: number
   signed?: string
   condition?: string
   search?: string
+  sort?: string
 }) {
   try {
     const payload = await getPayload({ config: configPromise })
@@ -24,11 +25,19 @@ export async function getBooks(filters?: {
     }
 
     if (filters?.language) {
-      where.language = { equals: filters.language }
+      if (Array.isArray(filters.language)) {
+        where.language = { in: filters.language }
+      } else {
+        where.language = { equals: filters.language }
+      }
     }
 
     if (filters?.binding) {
-      where.binding = { equals: filters.binding }
+      if (Array.isArray(filters.binding)) {
+        where.binding = { in: filters.binding }
+      } else {
+        where.binding = { equals: filters.binding }
+      }
     }
 
     if (filters?.signed) {
@@ -47,17 +56,39 @@ export async function getBooks(filters?: {
 
     if (filters?.search) {
       where.or = [
-        { title: { contains: filters.search } },
-        { author: { contains: filters.search } },
-        { description: { contains: filters.search } },
+        { title: { like: filters.search } },
+        { author: { like: filters.search } },
+        { description: { like: filters.search } },
       ]
+    }
+
+    // Handle sorting
+    let sortField = '-createdAt'
+    if (filters?.sort) {
+      switch (filters.sort) {
+        case 'price-low':
+          sortField = 'price'
+          break
+        case 'price-high':
+          sortField = '-price'
+          break
+        case 'name-asc':
+          sortField = 'title'
+          break
+        case 'name-desc':
+          sortField = '-title'
+          break
+        case 'newest':
+          sortField = '-createdAt'
+          break
+      }
     }
 
     const books = await payload.find({
       collection: 'books',
       where,
       limit: 100,
-      sort: '-createdAt',
+      sort: sortField,
     })
 
     return books.docs

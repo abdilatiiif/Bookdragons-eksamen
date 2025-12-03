@@ -103,3 +103,20 @@ legge inn books inni i data basen:
 - "https://picsum.photos/400/500"
 - BUG : Z-index på knappene til filter fikset
 -
+
+- Endre FilterSidebar til å oppdatere URL params
+- Endre BooksSection til å lese params og sende til getBooks()
+- Gjøre BooksSection til en client component som fetcher data
+- Filter funksjonen skal funke, må trykke bruk filter knapp
+- https://www.norli.no/boker - componenten
+
+  3.des
+
+- filter funksjonalitet utbedres
+- sjanger filter funker ikke, må legge til manuelt via admin
+- filter skal funke på alle bøker nå
+- book segment utarbeides til egen side
+- auth - hvem er logget inn, admin eller bruker - egen dashboard basert på det
+-
+- bruker kjøp / admin leggger til bøker
+-

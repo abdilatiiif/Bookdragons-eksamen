@@ -1,9 +1,15 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Search, SlidersHorizontal, X, ChevronDown, ChevronUp } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function FilterSidebar() {
+  console.log('FilterSidebar component rendered')
+
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState('')
   const [priceRange, setPriceRange] = useState([0, 1000])
@@ -48,6 +54,84 @@ export default function FilterSidebar() {
     }))
   }
 
+  // Initialize from URL params
+  useEffect(() => {
+    const search = searchParams.get('search')
+    const sort = searchParams.get('sort')
+    const minPrice = searchParams.get('minPrice')
+    const maxPrice = searchParams.get('maxPrice')
+
+    if (search) setSearchQuery(search)
+    if (sort) setSortBy(sort)
+    if (minPrice || maxPrice) {
+      setPriceRange([parseInt(minPrice || '0'), parseInt(maxPrice || '1000')])
+    }
+
+    // Load genre, signed, binding, language from params
+    const genreParams = searchParams.getAll('genre')
+    if (genreParams.length) {
+      const newGenre = { ...genre }
+      genreParams.forEach((g) => {
+        if (g in newGenre) newGenre[g as keyof typeof genre] = true
+      })
+      setGenre(newGenre)
+    }
+
+    const signedParam = searchParams.get('signed')
+    if (signedParam === 'signed') setSigned({ signed: true, unsigned: false })
+    if (signedParam === 'unsigned') setSigned({ signed: false, unsigned: true })
+
+    const bindingParams = searchParams.getAll('binding')
+    if (bindingParams.length) {
+      const newBinding = { ...binding }
+      bindingParams.forEach((b) => {
+        if (b in newBinding) newBinding[b as keyof typeof binding] = true
+      })
+      setBinding(newBinding)
+    }
+
+    const langParams = searchParams.getAll('language')
+    if (langParams.length) {
+      const newLanguage = { ...language }
+      langParams.forEach((l) => {
+        if (l in newLanguage) newLanguage[l as keyof typeof language] = true
+      })
+      setLanguage(newLanguage)
+    }
+  }, [])
+
+  const handleApplyFilters = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const params = new URLSearchParams()
+
+    if (searchQuery) params.set('search', searchQuery)
+    if (sortBy) params.set('sort', sortBy)
+    if (priceRange[0] > 0) params.set('minPrice', priceRange[0].toString())
+    if (priceRange[1] < 1000) params.set('maxPrice', priceRange[1].toString())
+
+    // Add selected genres
+    Object.entries(genre).forEach(([key, value]) => {
+      if (value) params.append('genre', key)
+    })
+
+    // Add signed filter
+    if (signed.signed && !signed.unsigned) params.set('signed', 'signed')
+    if (signed.unsigned && !signed.signed) params.set('signed', 'unsigned')
+
+    // Add binding filters
+    Object.entries(binding).forEach(([key, value]) => {
+      if (value) params.append('binding', key)
+    })
+
+    // Add language filters
+    Object.entries(language).forEach(([key, value]) => {
+      if (value) params.append('language', key)
+    })
+
+    router.push(`/books?${params.toString()}`)
+  }
+
   const handleReset = () => {
     setSearchQuery('')
     setSortBy('')
@@ -55,11 +139,25 @@ export default function FilterSidebar() {
     setSigned({ signed: false, unsigned: false })
     setBinding({ pocket: false, hardcover: false, audiobook: false, ebook: false })
     setLanguage({ norwegian: false, english: false, other: false })
+    setGenre({
+      fiction: false,
+      crime: false,
+      fantasy: false,
+      scifi: false,
+      romance: false,
+      thriller: false,
+      biography: false,
+      history: false,
+      children: false,
+      youth: false,
+    })
+    router.push('/books')
   }
 
   const FilterSection = ({ title, sectionKey, children }) => (
     <div className="border-b border-black pb-4">
       <button
+        type="button"
         onClick={() => toggleSection(sectionKey)}
         className="w-full flex items-center justify-between text-left font-semibold text-gray-800 mb-3 hover:text-amber-600 transition"
       >
@@ -75,13 +173,17 @@ export default function FilterSidebar() {
   )
 
   return (
-    <div className="allPages rounded-lg shadow-lg p-4  sticky top-4">
+    <form onSubmit={handleApplyFilters} className="allPages rounded-lg shadow-lg p-4  sticky top-4">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <SlidersHorizontal className="w-5 h-5 text-amber-600" />
           <h2 className="text-xl font-bold text-gray-800">Filtrer bøker</h2>
         </div>
-        <button onClick={handleReset} className="text-sm  hover:text-amber-600 transition">
+        <button
+          type="button"
+          onClick={handleReset}
+          className="text-sm  hover:text-amber-600 transition"
+        >
           Nullstill
         </button>
       </div>
@@ -98,6 +200,7 @@ export default function FilterSidebar() {
           />
           {searchQuery && (
             <button
+              type="button"
               onClick={() => setSearchQuery('')}
               className="absolute right-3 top-1/2 transform -translate-y-1/2"
             >
@@ -130,28 +233,12 @@ export default function FilterSidebar() {
             min="0"
             max="1000"
             value={priceRange[1]}
-            onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+            onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
             className="w-full accent-amber-600"
           />
           <div className="flex items-center justify-between text-sm">
-            <span className="text-gray-600">0 kr</span>
+            <span className="text-gray-600">{priceRange[0]} kr</span>
             <span className="font-semibold text-amber-600">{priceRange[1]} kr</span>
-          </div>
-          <div className="flex gap-2">
-            <input
-              type="number"
-              placeholder="Min"
-              value={priceRange[0]}
-              onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
-              className="w-1/2 p-2 border border-black rounded text-sm"
-            />
-            <input
-              type="number"
-              placeholder="Max"
-              value={priceRange[1]}
-              onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 1000])}
-              className="w-1/2 p-2 border border-black rounded text-sm"
-            />
           </div>
         </div>
       </FilterSection>
@@ -347,9 +434,12 @@ export default function FilterSidebar() {
         </div>
       </FilterSection>
 
-      <button className="w-full mt-6 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition">
+      <button
+        type="submit"
+        className="w-full mt-6 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition"
+      >
         Bruk filtre
       </button>
-    </div>
+    </form>
   )
 }
