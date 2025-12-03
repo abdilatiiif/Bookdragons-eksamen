@@ -1,4 +1,8 @@
+'use client'
+
+import Login from '@/components/Login'
+
 function page() {
-  return <div>page</div>
+  return <Login />
 }
 export default page
