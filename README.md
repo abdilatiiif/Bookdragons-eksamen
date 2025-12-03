@@ -119,4 +119,9 @@ legge inn books inni i data basen:
 - auth - hvem er logget inn, admin eller bruker - egen dashboard basert på det
 -
 - bruker kjøp / admin leggger til bøker
+- components er laget ferdig.
+- lager bruker collection, slugs user inn på database
+- auth funker, bruker kan opprettes, logg inn og ut blir lagret og fjernet som tokens, cookies
+- har begrenset rettigheter på brukere gjennom collections
+- eksperimentere på slugs kjøp/behandling/status på bøkene, admin rettigheter
 -

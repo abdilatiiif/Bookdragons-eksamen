@@ -1,5 +1,6 @@
 import 'animate.css'
-
+import { useRouter } from 'next/navigation'
+import { logoutUser } from '@/ACTIONS/POST/logoutUser'
 import {
   Accordion,
   AccordionContent,
@@ -27,6 +28,36 @@ import { DarkMode } from '../DarkMode'
 import { Input } from '../ui/input'
 
 export function NavigationMenuMobile() {
+  const router = useRouter()
+  const [user, setUser] = React.useState<any>(null)
+
+  const checkUser = React.useCallback(() => {
+    const cookies = document.cookie.split(';')
+    const userCookie = cookies.find((c) => c.trim().startsWith('currentUser='))
+    if (userCookie) {
+      try {
+        const userData = JSON.parse(decodeURIComponent(userCookie.split('=')[1]))
+        setUser(userData)
+      } catch (e) {
+        setUser(null)
+      }
+    } else {
+      setUser(null)
+    }
+  }, [])
+
+  React.useEffect(() => {
+    checkUser()
+    const interval = setInterval(checkUser, 1000)
+    return () => clearInterval(interval)
+  }, [checkUser])
+
+  const handleLogout = async () => {
+    await logoutUser()
+    setUser(null)
+    router.push('/auth/login')
+  }
+
   const navLinks = [
     { title: 'Hjem', href: '/' },
     { title: 'Eventer', href: '/events' },
@@ -69,6 +100,28 @@ export function NavigationMenuMobile() {
                   <ArrowDownRight className="ml-2 h-4 w-4" />
                 </Link>
               ))}
+              {user ? (
+                <div className="flex w-full flex-col gap-2 mt-2">
+                  <Link
+                    href="/dashboard/bruker"
+                    className="flex items-center w-full border-2 rounded-lg p-2 bg-amber-200 transition-all"
+                  >
+                    Dashboard
+                    <ArrowDownRight className="ml-2 h-4 w-4" />
+                  </Link>
+                  <Button variant="destructive" onClick={handleLogout} className="w-full">
+                    Logg ut
+                  </Button>
+                </div>
+              ) : (
+                <Link
+                  href="/auth/login"
+                  className="flex items-center w-full border-2 rounded-lg p-2 bg-amber-200 transition-all"
+                >
+                  Logg inn
+                  <ArrowDownRight className="ml-2 h-4 w-4" />
+                </Link>
+              )}
             </AccordionContent>
           </AccordionItem>
         </Accordion>
