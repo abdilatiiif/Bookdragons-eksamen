@@ -1,7 +1,6 @@
 import { BookOpen } from 'lucide-react'
 
 function Footer() {
-  console.log('Footer component rendered')
   return (
     <footer className="bg-[#e8c69d]  mt-16 py-8">
       <div className="max-w-7xl mx-auto px-4 text-center">

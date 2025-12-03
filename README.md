@@ -73,4 +73,50 @@ start av payload prosjekt - git init
 
 - Laster ned tailwind, shadcn, icons
 - Mobile first utvikling
-- navbar klar desktok & mobil versjon
+- navbar klar desktop & mobil versjon
+- hjemmesiden ferdig, og nav ferdig for desktop og mobil
+- DarkMood (ikke aktivert enda)
+
+- Oppstart av books pages.
+- pages skal gjøres ferdig før, data blir hentet fra DB.
+- Oppretter collections for books
+- viser fram fra, legger inn books i DB , Seeding?
+
+-Payload anbefaler og som unngår feil, migrasjonsproblemer og databasekræsj. payload LOCAL api
+
+2.des
+
+- lager ferdig filter componenten, både mobil og desktop
+- lager slugs books , legger til collections
+- skal lage cvs fill med data som skal importeres til databasen.
+- Sørger for at filteret og slugs databasen matcher
+- importerer csv fil også til data
+
+legge inn books inni i data basen:
+-pnpm payload migrate:create
+-pnpm payload migrate
+-pnpm tsx script/seed-bookdragons.tsx
+
+- Prøver å skille mellom hva er client server og action server
+- prøver å hente data fra DB for å vise inn på siden før jeg lager filter funksjon
+- Alle bøkene vises , men uten bilde - bruke random bilde basert på random ISBN nr.
+- "https://picsum.photos/400/500"
+- BUG : Z-index på knappene til filter fikset
+-
+
+- Endre FilterSidebar til å oppdatere URL params
+- Endre BooksSection til å lese params og sende til getBooks()
+- Gjøre BooksSection til en client component som fetcher data
+- Filter funksjonen skal funke, må trykke bruk filter knapp
+- https://www.norli.no/boker - componenten
+
+  3.des
+
+- filter funksjonalitet utbedres
+- sjanger filter funker ikke, må legge til manuelt via admin
+- filter skal funke på alle bøker nå
+- book segment utarbeides til egen side
+- auth - hvem er logget inn, admin eller bruker - egen dashboard basert på det
+-
+- bruker kjøp / admin leggger til bøker
+-

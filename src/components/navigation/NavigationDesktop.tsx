@@ -52,20 +52,16 @@ export function NavigationDesktop() {
             <ul className="grid w-[300px] gap-4">
               <li>
                 <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <Link className="font-medium" href="/about">
-                      Om Oss
-                    </Link>
+                  <Link href="/about">
+                    Om Oss
                     <div className="text-muted-foreground">
                       Lær mer om BookDragons, vårt team og vår lidenskap for bøker.
                     </div>
                   </Link>
                 </NavigationMenuLink>
                 <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <Link className="font-medium" href="/contact">
-                      Kontakt & Support
-                    </Link>
+                  <Link href="/contact">
+                    Kontakt & Support
                     <div className="text-muted-foreground">
                       Kontakt oss for spørsmål, support og hjelp med våre tjenester.
                     </div>
@@ -73,10 +69,8 @@ export function NavigationDesktop() {
                 </NavigationMenuLink>
 
                 <NavigationMenuLink asChild>
-                  <Link href="#">
-                    <Link className="font-medium" href="/login">
-                      Logg inn/registrer
-                    </Link>
+                  <Link href="/login">
+                    Logg inn/registrer
                     <div className="text-muted-foreground">
                       Få tilgang til din konto for å administrere bestillinger
                     </div>

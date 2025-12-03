@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    books: Book;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    books: BooksSelect<false> | BooksSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -161,6 +163,41 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books".
+ */
+export interface Book {
+  id: number;
+  title: string;
+  author: string;
+  price: number;
+  description?: string | null;
+  image?: (number | null) | Media;
+  signed: 'signed' | 'unsigned';
+  binding: 'pocket' | 'hardcover' | 'audiobook' | 'ebook';
+  language: 'norwegian' | 'english' | 'other';
+  genre?:
+    | (
+        | 'fiction'
+        | 'crime'
+        | 'fantasy'
+        | 'scifi'
+        | 'romance'
+        | 'thriller'
+        | 'biography'
+        | 'history'
+        | 'children'
+        | 'youth'
+      )[]
+    | null;
+  isbn?: string | null;
+  publishedYear?: number | null;
+  condition?: ('like-new' | 'very-good' | 'good' | 'acceptable') | null;
+  stock?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -190,6 +227,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'books';
+        value: number | Book;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -272,6 +313,27 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "books_select".
+ */
+export interface BooksSelect<T extends boolean = true> {
+  title?: T;
+  author?: T;
+  price?: T;
+  description?: T;
+  image?: T;
+  signed?: T;
+  binding?: T;
+  language?: T;
+  genre?: T;
+  isbn?: T;
+  publishedYear?: T;
+  condition?: T;
+  stock?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
