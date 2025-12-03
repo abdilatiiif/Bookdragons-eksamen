@@ -124,6 +124,27 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  name: string;
+  phone?: string | null;
+  address?: string | null;
+  role: 'admin' | 'customer';
+  orderStatus?: ('under_behandling' | 'klar_for_henting' | 'hentet') | null;
+  pickupReadyAt?: string | null;
+  pickedUpAt?: string | null;
+  orders?:
+    | {
+        book: number | Book;
+        quantity?: number | null;
+        status?: ('til_godkjenning' | 'godkjent' | 'hentet') | null;
+        /**
+         * Valgfritt notat fra selger/admin
+         */
+        note?: string | null;
+        createdAt?: string | null;
+        updatedAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -141,25 +162,6 @@ export interface User {
       }[]
     | null;
   password?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -195,6 +197,25 @@ export interface Book {
   stock?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -279,6 +300,24 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  phone?: T;
+  address?: T;
+  role?: T;
+  orderStatus?: T;
+  pickupReadyAt?: T;
+  pickedUpAt?: T;
+  orders?:
+    | T
+    | {
+        book?: T;
+        quantity?: T;
+        status?: T;
+        note?: T;
+        createdAt?: T;
+        updatedAt?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;

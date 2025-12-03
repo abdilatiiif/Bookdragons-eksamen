@@ -1,6 +1,11 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
-import { Menu } from 'lucide-react'
+import { Menu, LogOut, User } from 'lucide-react'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { logoutUser } from '@/ACTIONS/POST/logoutUser'
 
 import {
   Sheet,
@@ -19,6 +24,39 @@ import { DarkMode } from '../DarkMode'
 import { NavigationMenuMobile } from './NavigationMenuMobile'
 
 export function Navigation() {
+  const [user, setUser] = useState<any>(null)
+  const router = useRouter()
+
+  const checkUser = () => {
+    const cookies = document.cookie.split(';')
+    const userCookie = cookies.find((c) => c.trim().startsWith('currentUser='))
+    if (userCookie) {
+      try {
+        const userData = JSON.parse(decodeURIComponent(userCookie.split('=')[1]))
+        setUser(userData)
+      } catch (e) {
+        console.error('Failed to parse user cookie')
+        setUser(null)
+      }
+    } else {
+      setUser(null)
+    }
+  }
+
+  useEffect(() => {
+    checkUser()
+
+    // Check user on interval (to catch cookie changes)
+    const interval = setInterval(checkUser, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const handleLogout = async () => {
+    await logoutUser()
+    setUser(null)
+    router.push('/auth/login')
+  }
   return (
     <div className="flex allPages fixed z-50 flex-row items-center justify-between h-20 w-full">
       {/** desktop  */}
@@ -40,7 +78,24 @@ export function Navigation() {
 
       <div className="z-10 hidden md:flex items-center gap-2 pr-4">
         <DarkMode />
-        <Button>Login</Button>
+        {user ? (
+          <div className="flex items-center gap-2">
+            <Link href="/dashboard/bruker">
+              <Button variant="outline" className="gap-2">
+                <User className="w-4 h-4" />
+                {user.name || user.email}
+              </Button>
+            </Link>
+            <Button variant="destructive" onClick={handleLogout} className="gap-2">
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+          </div>
+        ) : (
+          <Link href="/auth/login">
+            <Button>Login</Button>
+          </Link>
+        )}
       </div>
       {/** mobile  */}
 

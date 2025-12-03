@@ -5,6 +5,16 @@ export const Books: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
   },
+  access: {
+    // Alle kan lese bøker (offentlig)
+    read: () => true,
+    // Kun admins kan opprette bøker
+    create: ({ req: { user } }) => user?.role === 'admin',
+    // Kun admins kan oppdatere bøker
+    update: ({ req: { user } }) => user?.role === 'admin',
+    // Kun admins kan slette bøker
+    delete: ({ req: { user } }) => user?.role === 'admin',
+  },
   fields: [
     {
       name: 'title',
