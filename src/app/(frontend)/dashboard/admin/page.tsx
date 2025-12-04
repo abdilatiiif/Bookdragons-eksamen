@@ -12,7 +12,7 @@ function page() {
             <div className="flex items-center gap-3">
               <BookOpen className="w-10 h-10" />
               <div>
-                <h1 className="text-3xl bg-red-500 p-4 rounded-3xl font-bold">
+                <h1 className="md:text-3xl  bg-red-500 p-4 rounded-3xl font-bold">
                   BookDragons - Admin
                 </h1>
               </div>
