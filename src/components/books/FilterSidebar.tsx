@@ -5,8 +5,6 @@ import { Search, SlidersHorizontal, X, ChevronDown, ChevronUp } from 'lucide-rea
 import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function FilterSidebar() {
-  console.log('FilterSidebar component rendered')
-
   const router = useRouter()
   const searchParams = useSearchParams()
 

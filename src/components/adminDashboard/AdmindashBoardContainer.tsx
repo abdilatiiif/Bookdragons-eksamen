@@ -4,6 +4,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import AddBook from './AddBook'
+import Bestillinger from './Bestillnger'
+import BrukerListe from './BrukerListe'
 
 export function AdmindashBoardContainer() {
   return (
@@ -11,20 +14,19 @@ export function AdmindashBoardContainer() {
       <AccordionItem value="item-1">
         <AccordionTrigger className="md:text-2xl">Legg til Bøker</AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 text-balance">
-          input felt for boktittel, forfatter, pris, beskrivelse, kategori, bilde-URL
+          <AddBook />
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-2">
-        <AccordionTrigger>Innkommende bestilling</AccordionTrigger>
+        <AccordionTrigger className="md:text-2xl">Innkommende bestilling</AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 text-balance">
-          liste over alle Innkommende bestillinger med detaljer som kundeinfo, bestilte bøker,
-          totalbeløp, bestillingsdato, status (behandles, sendt, levert)
+          <Bestillinger />
         </AccordionContent>
       </AccordionItem>
       <AccordionItem value="item-3">
-        <AccordionTrigger>Brukere</AccordionTrigger>
+        <AccordionTrigger className="md:text-2xl">Brukere</AccordionTrigger>
         <AccordionContent className="flex flex-col gap-4 text-balance">
-          liste over alle registrerte brukere
+          <BrukerListe />
         </AccordionContent>
       </AccordionItem>
     </Accordion>

@@ -155,3 +155,9 @@ rawCode: 1
 - omdiringering til admin dashboard hvis role er admin
 - gjorde om på nav - ingen kurv eller kjøp på admin bruker. og bruker knappen skal til den bestemte userRole - /admin eller /bruker
 - Accordion fra shadcn for admin siden
+- lager admin dashboard med å legge til bok, med samme info som slugs, component først uten funksjoner
+- laget innkommende besttlinger uten fuksjoner, det skal kunne sortes etter status på varene
+- og siste tab med bruker liste over alle kundene butikken har. så kan de slette brukere etter ønske
+- compoentene funker fint med eksempel orders og virker som det skal
+- de er klar tilbruk
+- må lage action servers for å håndere api calls

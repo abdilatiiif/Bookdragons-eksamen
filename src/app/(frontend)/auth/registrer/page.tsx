@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Mail, Lock, User, Phone, MapPin, Eye, EyeOff } from 'lucide-react'
+import { Mail, Lock, User, Phone, Eye, EyeOff } from 'lucide-react'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -17,7 +17,6 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: '',
     phone: '',
-    address: '',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,7 +49,6 @@ export default function RegisterPage() {
           password: formData.password,
           name: formData.name,
           phone: formData.phone,
-          address: formData.address,
           role: 'customer',
         }),
       })
@@ -179,21 +177,6 @@ export default function RegisterPage() {
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
               placeholder="+47 123 45 678"
-            />
-          </div>
-
-          {/* Adresse (valgfri) */}
-          <div>
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-              <MapPin className="w-4 h-4" />
-              Adresse (valgfritt)
-            </label>
-            <input
-              type="text"
-              value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              placeholder="Gate 42, 0123 Oslo"
             />
           </div>
 

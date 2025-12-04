@@ -6,8 +6,6 @@ function Book({ book }: { book: any }) {
   const seed = encodeURIComponent(book?.id ?? book?.isbn ?? book?.title ?? String(Math.random()))
   const imgSrc = `https://picsum.photos/seed/${seed}/400/500`
 
-  console.log(book)
-
   function handleClick() {
     console.log(`Book "${book.title}" clicked!`)
     const bookUrl = `/books/${book.id}`
