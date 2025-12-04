@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { Heart, ShoppingCart, Minus, Plus, ArrowLeft } from 'lucide-react'
+import { Heart, ShoppingCart, Minus, Plus, ArrowLeft, Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 function BookDetail({ book }: { book: any }) {
   const router = useRouter()
   const [quantity, setQuantity] = useState(1)
   const [isFavorite, setIsFavorite] = useState(false)
+  const [addedToCart, setAddedToCart] = useState(false)
 
   const seed = encodeURIComponent(book?.id ?? book?.isbn ?? book?.title ?? 'default')
   const imgSrc = `https://picsum.photos/seed/${seed}/400/600`
@@ -15,30 +17,51 @@ function BookDetail({ book }: { book: any }) {
   const handleIncrement = () => {
     if (quantity < book.stock) {
       setQuantity(quantity + 1)
+      setAddedToCart(false)
     }
   }
 
   const handleDecrement = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1)
+      setAddedToCart(false)
     }
   }
 
   const handleAddToCart = () => {
-    // TODO: Implementer handlekurv-logikk her
-    alert(`Lagt til ${quantity} stk i handlekurven!`)
+    const cart = localStorage.getItem('cart')
+    const cartItems = cart ? JSON.parse(cart) : []
+
+    const existingItem = cartItems.find((item: any) => item.bookId === book.id)
+
+    if (existingItem) {
+      existingItem.quantity += quantity
+    } else {
+      cartItems.push({
+        bookId: book.id,
+        title: book.title,
+        author: book.author,
+        price: book.price,
+        quantity: quantity,
+        stock: book.stock,
+      })
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cartItems))
+
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: cartItems }))
+
+    setAddedToCart(true)
   }
 
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite)
-    console.log(`Toggled favorite for "${book.title}"`)
   }
 
   const totalPrice = book.price * quantity
 
   return (
     <div className="max-w-7xl mx-auto">
-      {/* tilbake Button */}
       <button
         onClick={() => router.back()}
         className="flex items-center gap-2 text-gray-600 hover:text-amber-600 mb-6 transition"
@@ -48,22 +71,6 @@ function BookDetail({ book }: { book: any }) {
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div className="relative bg-white rounded-lg p-8 shadow-lg flex justify-center items-center">
-          <img src={imgSrc} alt={book.title} className="max-h-[600px] w-auto object-contain" />
-
-          {book.signed === 'signed' && (
-            <div className="absolute top-4 right-4 bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md">
-              ✍️ Signert
-            </div>
-          )}
-
-          {book.stock > 0 && book.stock <= 3 && (
-            <div className="absolute top-4 left-4 bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md">
-              ⚠️ Få på lager
-            </div>
-          )}
-        </div>
-
         {/* Info Section */}
         <div className="flex flex-col">
           <div className="mb-6">
@@ -107,41 +114,26 @@ function BookDetail({ book }: { book: any }) {
             )}
           </div>
 
-          {book.stock > 0 && (
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Antall:</label>
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={handleDecrement}
-                  disabled={quantity <= 1}
-                  className="bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed rounded-lg p-3 transition"
-                >
-                  <Minus className="w-5 h-5 text-gray-700" />
-                </button>
-                <span className="text-2xl font-bold text-gray-900 w-12 text-center">
-                  {quantity}
-                </span>
-                <button
-                  onClick={handleIncrement}
-                  disabled={quantity >= book.stock}
-                  className="bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed rounded-lg p-3 transition"
-                >
-                  <Plus className="w-5 h-5 text-gray-700" />
-                </button>
-              </div>
-            </div>
-          )}
-
           {/* Action Buttons */}
           <div className="flex gap-4 mb-8">
-            <button
-              onClick={handleAddToCart}
-              disabled={book.stock === 0}
-              className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-4 px-6 rounded-lg font-bold text-lg flex items-center justify-center gap-2 transition shadow-lg"
-            >
-              <ShoppingCart className="w-6 h-6" />
-              {book.stock > 0 ? 'Legg i handlekurv' : 'Utsolgt'}
-            </button>
+            {addedToCart ? (
+              <button
+                disabled
+                className="flex-1 bg-green-600 text-white py-4 px-6 rounded-lg font-bold text-lg flex items-center justify-center gap-2 transition shadow-lg"
+              >
+                <Check className="w-6 h-6" />
+                Lagt i handlekurven!
+              </button>
+            ) : (
+              <button
+                onClick={handleAddToCart}
+                disabled={book.stock === 0}
+                className="flex-1 bg-amber-600 hover:bg-amber-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-4 px-6 rounded-lg font-bold text-lg flex items-center justify-center gap-2 transition shadow-lg"
+              >
+                <ShoppingCart className="w-6 h-6" />
+                {book.stock > 0 ? 'Legg i handlekurv' : 'Utsolgt'}
+              </button>
+            )}
 
             <button
               onClick={toggleFavorite}
@@ -155,31 +147,14 @@ function BookDetail({ book }: { book: any }) {
             </button>
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-6 mb-6">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">Detaljer</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">ISBN:</span>
-                <span className="font-semibold text-gray-900">{book.isbn || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Utgitt:</span>
-                <span className="font-semibold text-gray-900">{book.publishedYear || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Innbinding:</span>
-                <span className="font-semibold text-gray-900">{book.binding || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Språk:</span>
-                <span className="font-semibold text-gray-900">{book.language || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Tilstand:</span>
-                <span className="font-semibold text-gray-900">{book.condition || 'N/A'}</span>
-              </div>
-            </div>
-          </div>
+          {addedToCart && (
+            <Link
+              href="/cart"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-bold text-lg flex items-center justify-center gap-2 transition shadow-lg mb-8"
+            >
+              Gå til handlekurv →
+            </Link>
+          )}
 
           {/* Description */}
           {book.description && (

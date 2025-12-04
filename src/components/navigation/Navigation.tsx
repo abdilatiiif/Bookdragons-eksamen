@@ -1,30 +1,18 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Menu, LogOut, User } from 'lucide-react'
+import { LogOut, User, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { logoutUser } from '@/ACTIONS/POST/logoutUser'
 
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTrigger,
-  SheetTitle,
-} from '@/components/ui/sheet'
-
 import { NavigationDesktop } from './NavigationDesktop'
-
-import { DarkMode } from '../DarkMode'
 import { NavigationMenuMobile } from './NavigationMenuMobile'
 
 export function Navigation() {
   const [user, setUser] = useState<any>(null)
+  const [cartCount, setCartCount] = useState(0)
   const router = useRouter()
 
   const checkUser = () => {
@@ -43,24 +31,47 @@ export function Navigation() {
     }
   }
 
+  const updateCartCount = () => {
+    const cart = localStorage.getItem('cart')
+    if (cart) {
+      const items = JSON.parse(cart)
+      const total = items.reduce((sum: number, item: any) => sum + item.quantity, 0)
+      setCartCount(total)
+    } else {
+      setCartCount(0)
+    }
+  }
+
   useEffect(() => {
     checkUser()
+    updateCartCount()
 
-    // Check user on interval (to catch cookie changes)
+    // Check user on interval
     const interval = setInterval(checkUser, 1000)
 
-    return () => clearInterval(interval)
+    // Listen for storage changes (from other tabs)
+    window.addEventListener('storage', updateCartCount)
+
+    // Listen for custom cart update event (same page updates)
+    window.addEventListener('cartUpdated', updateCartCount)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('storage', updateCartCount)
+      window.removeEventListener('cartUpdated', updateCartCount)
+    }
   }, [])
 
   const handleLogout = async () => {
     await logoutUser()
     setUser(null)
+    localStorage.removeItem('cart')
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: [] }))
     router.push('/auth/login')
   }
+
   return (
     <div className="flex allPages fixed z-50 flex-row items-center justify-between h-20 w-full">
-      {/** desktop  */}
-
       <NavigationDesktop />
 
       <div className="z-50 fixed ml-4 md:hidden">
@@ -77,10 +88,23 @@ export function Navigation() {
       </div>
 
       <div className="z-10 hidden md:flex items-center gap-2 pr-4">
-        <DarkMode />
+        {user?.role !== 'admin' && (
+          <Link href="/cart" className="relative">
+            <Button variant="outline" className="gap-2">
+              <ShoppingCart className="w-4 h-4" />
+              Kurv
+            </Button>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+        )}
+
         {user ? (
           <div className="flex items-center gap-2">
-            <Link href="/dashboard/bruker">
+            <Link href={user.role === 'admin' ? '/dashboard/admin' : '/dashboard/bruker'}>
               <Button variant="outline" className="gap-2">
                 <User className="w-4 h-4" />
                 {user.name || user.email}
@@ -97,7 +121,6 @@ export function Navigation() {
           </Link>
         )}
       </div>
-      {/** mobile  */}
 
       <NavigationMenuMobile />
     </div>

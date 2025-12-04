@@ -1,62 +1,50 @@
+'use client'
+
 import { Package, Clock } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { getUserOrders } from '@/ACTIONS/GET/getUserOrders'
 
 export function OrdersTab() {
-  // Mock orders data
-  const orders = [
-    {
-      id: 'ORD-001',
-      date: '2025-11-28',
-      status: 'ready',
-      items: [
-        { title: 'Batman', author: 'Latif HH', price: 3000, quantity: 1 },
-        { title: 'Mysteriet på slottet', author: 'Anna Hansen', price: 299, quantity: 2 },
-      ],
-      total: 3598,
-    },
-    {
-      id: 'ORD-002',
-      date: '2025-11-15',
-      status: 'picked-up',
-      items: [{ title: 'Dragens hemmelighet', author: 'Erik Nordmann', price: 349, quantity: 1 }],
-      total: 349,
-    },
-    {
-      id: 'ORD-003',
-      date: '2025-11-01',
-      status: 'picked-up',
-      items: [
-        { title: 'Sommerens eventyr', author: 'Lisa Berg', price: 279, quantity: 1 },
-        { title: 'Stjernenes barn', author: 'Maria Svendsen', price: 399, quantity: 1 },
-      ],
-      total: 678,
-    },
-    {
-      id: 'ORD-004',
-      date: '2025-10-20',
-      status: 'processing',
-      items: [
-        { title: 'Koden', author: 'Dan Brown', price: 329, quantity: 1 },
-      ],
-      total: 329,
-    },
-  ]
+  const [orders, setOrders] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchOrders() {
+      const result = await getUserOrders()
+      if (result.success) {
+        setOrders(result.orders)
+      }
+      setLoading(false)
+    }
+    fetchOrders()
+  }, [])
 
   const getStatusText = (status: string) => {
     const statuses: Record<string, string> = {
-      ready: 'Klar til henting',
-      'picked-up': 'Hentet',
-      processing: 'Behandles',
+      klar_til_henting: 'Klar til henting',
+      hentet: 'Hentet',
+      behandles: 'Behandles',
+      kansellert: 'Kansellert',
     }
     return statuses[status] || status
   }
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      ready: 'bg-green-100 text-green-800',
-      'picked-up': 'bg-gray-100 text-gray-800',
-      processing: 'bg-amber-100 text-amber-800',
+      klar_til_henting: 'bg-green-100 text-green-800',
+      hentet: 'bg-gray-100 text-gray-800',
+      behandles: 'bg-amber-100 text-amber-800',
+      kansellert: 'bg-red-100 text-red-800',
     }
     return colors[status] || 'bg-gray-100 text-gray-800'
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+      </div>
+    )
   }
 
   return (
@@ -86,10 +74,10 @@ export function OrdersTab() {
                 <div className="flex items-center gap-4">
                   <Package className="w-5 h-5 text-amber-600" />
                   <div>
-                    <p className="font-semibold text-gray-800">Ordre #{order.id}</p>
+                    <p className="font-semibold text-gray-800">Ordre #{order.orderNumber}</p>
                     <p className="text-sm text-gray-600 flex items-center gap-2">
                       <Clock className="w-4 h-4" />
-                      {new Date(order.date).toLocaleDateString('nb-NO')}
+                      {new Date(order.createdAt).toLocaleDateString('nb-NO')}
                     </p>
                   </div>
                 </div>
@@ -102,14 +90,18 @@ export function OrdersTab() {
 
               <div className="p-6">
                 <div className="space-y-3 mb-4">
-                  {order.items.map((item, index) => (
+                  {order.items.map((item: any, index: number) => (
                     <div
                       key={index}
                       className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0"
                     >
                       <div className="flex-1">
-                        <p className="font-semibold text-gray-800">{item.title}</p>
-                        <p className="text-sm text-gray-600">av {item.author}</p>
+                        <p className="font-semibold text-gray-800">
+                          {item.book?.title || 'Ukjent bok'}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          av {item.book?.author || 'Ukjent forfatter'}
+                        </p>
                       </div>
                       <div className="text-right">
                         <p className="text-gray-800">
@@ -125,10 +117,10 @@ export function OrdersTab() {
 
                 <div className="flex items-center justify-between pt-4 border-t-2 border-gray-200">
                   <span className="text-lg font-bold text-gray-800">Totalt</span>
-                  <span className="text-2xl font-bold text-amber-600">{order.total},-</span>
+                  <span className="text-2xl font-bold text-amber-600">{order.totalAmount},-</span>
                 </div>
 
-                {order.status === 'ready' && (
+                {order.status === 'klar_til_henting' && (
                   <div className="mt-4 p-4 bg-green-50 rounded-lg">
                     <p className="text-green-800 font-semibold mb-1">
                       ✓ Din bestilling er klar til henting!
@@ -139,21 +131,22 @@ export function OrdersTab() {
                   </div>
                 )}
 
-                {order.status === 'processing' && (
+                {order.status === 'behandles' && (
                   <div className="mt-4 p-4 bg-amber-50 rounded-lg">
-                    <p className="text-amber-800 font-semibold mb-1">
-                      ⏳ Bestillingen behandles
-                    </p>
+                    <p className="text-amber-800 font-semibold mb-1">⏳ Bestillingen behandles</p>
                     <p className="text-sm text-amber-700">
                       Vi klargjør bøkene dine. Du får beskjed når de er klare til henting.
                     </p>
                   </div>
                 )}
 
-                {order.status === 'picked-up' && (
+                {order.status === 'hentet' && (
                   <div className="mt-4 flex items-center justify-between">
                     <p className="text-sm text-gray-600">
-                      ✓ Hentet {new Date(order.date).toLocaleDateString('nb-NO')}
+                      ✓ Hentet{' '}
+                      {order.pickedUpAt
+                        ? new Date(order.pickedUpAt).toLocaleDateString('nb-NO')
+                        : new Date(order.createdAt).toLocaleDateString('nb-NO')}
                     </p>
                     <button className="text-amber-600 hover:text-amber-700 text-sm font-semibold">
                       Kjøp igjen

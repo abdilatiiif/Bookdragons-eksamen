@@ -70,6 +70,8 @@ export interface Config {
     users: User;
     media: Media;
     books: Book;
+    orders: Order;
+    wishlist: Wishlist;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +82,8 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     books: BooksSelect<false> | BooksSelect<true>;
+    orders: OrdersSelect<false> | OrdersSelect<true>;
+    wishlist: WishlistSelect<false> | WishlistSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -125,26 +129,7 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   name: string;
-  phone?: string | null;
-  address?: string | null;
   role: 'admin' | 'customer';
-  orderStatus?: ('under_behandling' | 'klar_for_henting' | 'hentet') | null;
-  pickupReadyAt?: string | null;
-  pickedUpAt?: string | null;
-  orders?:
-    | {
-        book: number | Book;
-        quantity?: number | null;
-        status?: ('til_godkjenning' | 'godkjent' | 'hentet') | null;
-        /**
-         * Valgfritt notat fra selger/admin
-         */
-        note?: string | null;
-        createdAt?: string | null;
-        updatedAt?: string | null;
-        id?: string | null;
-      }[]
-    | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -162,6 +147,25 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -200,22 +204,53 @@ export interface Book {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
+ * via the `definition` "orders".
  */
-export interface Media {
+export interface Order {
   id: number;
-  alt: string;
+  orderNumber: string;
+  customer: number | User;
+  items: {
+    book: number | Book;
+    quantity: number;
+    price: number;
+    id?: string | null;
+  }[];
+  /**
+   * Beregnes automatisk fra bestilte bøker
+   */
+  totalAmount: number;
+  status: 'behandles' | 'klar_til_henting' | 'hentet' | 'kansellert';
+  /**
+   * Settes automatisk når status endres til "Klar til henting"
+   */
+  readyForPickupAt?: string | null;
+  /**
+   * Settes automatisk når status endres til "Hentet"
+   */
+  pickedUpAt?: string | null;
+  /**
+   * Kun synlig for admin
+   */
+  notes?: string | null;
   updatedAt: string;
   createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
+}
+/**
+ * Brukerens ønskeliste for bøker
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "wishlist".
+ */
+export interface Wishlist {
+  id: number;
+  user: number | User;
+  /**
+   * Bøker som brukeren har lagt til i ønskelisten
+   */
+  books: (number | Book)[];
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -252,6 +287,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'books';
         value: number | Book;
+      } | null)
+    | ({
+        relationTo: 'orders';
+        value: number | Order;
+      } | null)
+    | ({
+        relationTo: 'wishlist';
+        value: number | Wishlist;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -301,23 +344,7 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
-  phone?: T;
-  address?: T;
   role?: T;
-  orderStatus?: T;
-  pickupReadyAt?: T;
-  pickedUpAt?: T;
-  orders?:
-    | T
-    | {
-        book?: T;
-        quantity?: T;
-        status?: T;
-        note?: T;
-        createdAt?: T;
-        updatedAt?: T;
-        id?: T;
-      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -371,6 +398,39 @@ export interface BooksSelect<T extends boolean = true> {
   publishedYear?: T;
   condition?: T;
   stock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "orders_select".
+ */
+export interface OrdersSelect<T extends boolean = true> {
+  orderNumber?: T;
+  customer?: T;
+  items?:
+    | T
+    | {
+        book?: T;
+        quantity?: T;
+        price?: T;
+        id?: T;
+      };
+  totalAmount?: T;
+  status?: T;
+  readyForPickupAt?: T;
+  pickedUpAt?: T;
+  notes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "wishlist_select".
+ */
+export interface WishlistSelect<T extends boolean = true> {
+  user?: T;
+  books?: T;
   updatedAt?: T;
   createdAt?: T;
 }
