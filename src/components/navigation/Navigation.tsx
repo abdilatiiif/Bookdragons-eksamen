@@ -1,26 +1,13 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Menu, LogOut, User, ShoppingCart } from 'lucide-react'
+import { LogOut, User, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { logoutUser } from '@/ACTIONS/POST/logoutUser'
 
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTrigger,
-  SheetTitle,
-} from '@/components/ui/sheet'
-
 import { NavigationDesktop } from './NavigationDesktop'
-
-import { DarkMode } from '../DarkMode'
 import { NavigationMenuMobile } from './NavigationMenuMobile'
 
 export function Navigation() {
@@ -85,8 +72,6 @@ export function Navigation() {
 
   return (
     <div className="flex allPages fixed z-50 flex-row items-center justify-between h-20 w-full">
-      {/** desktop  */}
-
       <NavigationDesktop />
 
       <div className="z-50 fixed ml-4 md:hidden">
@@ -103,24 +88,23 @@ export function Navigation() {
       </div>
 
       <div className="z-10 hidden md:flex items-center gap-2 pr-4">
-        <DarkMode />
-
-        {/* Cart Icon */}
-        <Link href="/cart" className="relative">
-          <Button variant="outline" className="gap-2">
-            <ShoppingCart className="w-4 h-4" />
-            Kurv
-          </Button>
-          {cartCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-              {cartCount}
-            </span>
-          )}
-        </Link>
+        {user?.role !== 'admin' && (
+          <Link href="/cart" className="relative">
+            <Button variant="outline" className="gap-2">
+              <ShoppingCart className="w-4 h-4" />
+              Kurv
+            </Button>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+        )}
 
         {user ? (
           <div className="flex items-center gap-2">
-            <Link href="/dashboard/bruker">
+            <Link href={user.role === 'admin' ? '/dashboard/admin' : '/dashboard/bruker'}>
               <Button variant="outline" className="gap-2">
                 <User className="w-4 h-4" />
                 {user.name || user.email}
@@ -137,7 +121,6 @@ export function Navigation() {
           </Link>
         )}
       </div>
-      {/** mobile  */}
 
       <NavigationMenuMobile />
     </div>

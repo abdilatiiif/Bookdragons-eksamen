@@ -134,3 +134,24 @@ legge inn books inni i data basen:
 - når bruker betaler skal det kkomme under ordere, som vises på siden
 - du må nå være logget inn for å kunne kjøpe, du blir referert tilbake til logginsiden
 -
+
+ERROR: query: 'INSERT INTO `__new_payload_locked_documents_rels`("id", "order", "parent_id", "path", "users_id", "media_id", "books_id", "orders_id", "wishlist_id") SELECT "id", "order", "parent_id", "path", "users_id", "media_id", "books_id", "orders_id", "wishlist_id" FROM `payload_locked_documents_rels`;',
+params: [],
+payloadInitError: true,
+digest: '3927969799',
+[cause]: [Error [LibsqlError]: SQLITE_ERROR: no such column: wishlist_id] {
+code: 'SQLITE_ERROR',
+rawCode: 1,
+[cause]: [SqliteError: no such column: wishlist_id] {
+code: 'SQLITE_ERROR',
+rawCode: 1
+}
+}
+
+- får dette opp hver gang jeg starter dev, men etter noen sekunder går den bort.
+
+- debugging av feil, data import og export filer. prøver å segregere action & client components
+- prøver at data og props flytter seg ned over til under elementer
+- omdiringering til admin dashboard hvis role er admin
+- gjorde om på nav - ingen kurv eller kjøp på admin bruker. og bruker knappen skal til den bestemte userRole - /admin eller /bruker
+- Accordion fra shadcn for admin siden

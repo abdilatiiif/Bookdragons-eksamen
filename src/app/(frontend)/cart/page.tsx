@@ -130,10 +130,10 @@ export default function CartPage() {
 
   if (cartItems.length === 0) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-amber-50 to-orange-50  py-25">
+      <div className="min-h-screen bg-linear-to-br from-amber-50 to-orange-50 py-12 md:py-24 pt-32">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">Kurven din er tom</h1>
+          <div className="bg-white rounded-lg shadow-lg p-6 md:p-12 text-center">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Kurven din er tom</h1>
             <p className="text-gray-600 mb-8">Du har ikke lagt til noen bøker ennå.</p>
             <Link href="/books">
               <Button className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3">
@@ -147,26 +147,28 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-amber-50 to-orange-50 py-25">
+    <div className="min-h-screen bg-linear-to-br from-amber-50 to-orange-50 py-12 md:py-24 pt-32">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-3 gap-8">
-          <div className="col-span-2">
-            <h1 className="text-3xl font-bold text-gray-800 mb-6">Handlekurv</h1>
+        <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
+          <div className="flex-1 lg:flex-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Handlekurv</h1>
 
             <div className="bg-white rounded-lg shadow-lg overflow-hidden">
               {cartItems.map((item) => (
                 <div
                   key={item.bookId}
-                  className="border-b border-gray-200 p-6 flex items-center justify-between hover:bg-gray-50 transition"
+                  className="border-b border-gray-200 p-4 md:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:bg-gray-50 transition"
                 >
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base md:text-lg font-semibold text-gray-800">
+                      {item.title}
+                    </h3>
                     <p className="text-sm text-gray-600">av {item.author}</p>
                     <p className="text-amber-600 font-bold mt-2">{item.price},-</p>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center border border-gray-300 rounded-lg">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4">
+                    <div className="flex items-center border border-gray-300 rounded-lg w-fit">
                       <button
                         onClick={() => updateQuantity(item.bookId, item.quantity - 1)}
                         className="p-2 hover:bg-gray-100 transition"
@@ -182,16 +184,16 @@ export default function CartPage() {
                       </button>
                     </div>
 
-                    <div className="text-right min-w-20">
-                      <p className="text-sm text-gray-600">Totalt</p>
-                      <p className="text-lg font-bold text-amber-600">
+                    <div className="text-right">
+                      <p className="text-xs md:text-sm text-gray-600">Totalt</p>
+                      <p className="text-base md:text-lg font-bold text-amber-600">
                         {item.price * item.quantity},-
                       </p>
                     </div>
 
                     <button
                       onClick={() => removeItem(item.bookId)}
-                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"
+                      className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition w-fit"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -200,24 +202,26 @@ export default function CartPage() {
               ))}
             </div>
 
-            <Link href="/books" className="mt-6 text-amber-600 hover:text-amber-700 font-semibold">
+            <Link
+              href="/books"
+              className="mt-4 md:mt-6 text-amber-600 hover:text-amber-700 font-semibold text-sm md:text-base"
+            >
               ← Fortsett shopping
             </Link>
           </div>
 
-         
-          <div className="col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-24">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">Oppsummering</h2>
+          <div className="flex-1 lg:flex-1">
+            <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 lg:sticky lg:top-24">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-6">Oppsummering</h2>
 
               <div className="space-y-4 mb-6">
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-600 text-sm md:text-base">
                   <span>Antall varer:</span>
                   <span className="font-semibold">
                     {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
                   </span>
                 </div>
-                <div className="flex justify-between text-gray-600">
+                <div className="flex justify-between text-gray-600 text-sm md:text-base">
                   <span>Antall bøker:</span>
                   <span className="font-semibold">{cartItems.length}</span>
                 </div>
@@ -225,15 +229,15 @@ export default function CartPage() {
 
               <div className="border-t border-gray-200 pt-4 mb-6">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-gray-800">Totalt:</span>
-                  <span className="text-3xl font-bold text-amber-600">{total},-</span>
+                  <span className="text-base md:text-lg font-bold text-gray-800">Totalt:</span>
+                  <span className="text-2xl md:text-3xl font-bold text-amber-600">{total},-</span>
                 </div>
               </div>
 
               <Button
                 onClick={handleCheckout}
                 disabled={loading || cartItems.length === 0}
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 font-bold text-lg rounded-lg transition disabled:opacity-50"
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 font-bold text-base md:text-lg rounded-lg transition disabled:opacity-50"
               >
                 {loading ? 'Behandler...' : 'Gå til betaling'}
               </Button>

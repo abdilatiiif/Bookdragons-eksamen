@@ -37,22 +37,10 @@ export const Users: CollectionConfig = {
     delete: ({ req: { user } }) => user?.role === 'admin',
   },
   fields: [
-    // Email og password er allerede inkludert via auth: true
     {
       name: 'name',
       type: 'text',
       required: true,
-      label: 'Fullt navn',
-    },
-    {
-      name: 'phone',
-      type: 'text',
-      label: 'Telefonnummer',
-    },
-    {
-      name: 'address',
-      type: 'text',
-      label: 'Adresse',
     },
     {
       name: 'role',
@@ -61,9 +49,12 @@ export const Users: CollectionConfig = {
       defaultValue: 'customer',
       options: [
         { label: 'Admin', value: 'admin' },
-        { label: 'Kunde', value: 'customer' },
+        { label: 'Customer', value: 'customer' },
       ],
-      label: 'Brukerrolle',
+      access: {
+        create: ({ req: { user } }) => user?.role === 'admin',
+        update: ({ req: { user } }) => user?.role === 'admin',
+      },
     },
   ],
 }

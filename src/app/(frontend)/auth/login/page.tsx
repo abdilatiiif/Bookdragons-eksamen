@@ -24,9 +24,14 @@ export default function LoginPage() {
 
     const result = await loginUser(formData.email, formData.password)
 
+    console.log(result)
+
     if (result.success) {
-      // Redirect til dashboard
-      router.push('/dashboard/bruker')
+      if (result?.userRole === 'admin') {
+        router.push('/dashboard/admin')
+      } else {
+        router.push('/dashboard/bruker')
+      }
     } else {
       setError(result.message || 'Noe gikk galt. Prøv igjen.')
       setLoading(false)
