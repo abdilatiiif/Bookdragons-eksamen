@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { apiPost } from '@/lib/api'
 
 interface CreateBookData {
   title: string
@@ -30,18 +31,9 @@ export async function createBook(data: CreateBookData) {
       }
     }
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SERVER_URL ||
-      process.env.NEXT_PUBLIC_PAYLOAD_URL ||
-      'http://localhost:3000'
-
-    const response = await fetch(`${baseUrl}/api/books`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
+    const responseData = await apiPost(
+      '/api/books',
+      {
         title: data.title,
         author: data.author,
         price: data.price,
@@ -55,18 +47,9 @@ export async function createBook(data: CreateBookData) {
         condition: data.condition,
         stock: data.stock || 1,
         image: data.image || null,
-      }),
-    })
-
-    const responseData = await response.json()
-
-    if (!response.ok) {
-      console.error('API error response:', responseData)
-      return {
-        success: false,
-        error: responseData.message || 'Kunne ikke opprette bok',
-      }
-    }
+      },
+      authToken,
+    )
 
     return {
       success: true,

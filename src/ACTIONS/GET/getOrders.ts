@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { apiGet } from '@/lib/api'
 
 export async function getAllOrders() {
   try {
@@ -14,34 +15,11 @@ export async function getAllOrders() {
       }
     }
 
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SERVER_URL ||
-      process.env.NEXT_PUBLIC_PAYLOAD_URL ||
-      'http://localhost:3000'
-
-    const response = await fetch(`${baseUrl}/api/orders`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
-      cache: 'no-store',
-    })
-
-    if (!response.ok) {
-      const errorData = await response.json()
-      console.error('API error response:', errorData)
-      return {
-        success: false,
-        error: errorData.message || 'Kunne ikke hente bestillinger',
-      }
-    }
-
-    const data = await response.json()
+    const data = await apiGet('/api/orders', authToken)
 
     return {
       success: true,
-      data: data.docs || [],
+      data: (data as any).docs || [],
     }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error)

@@ -170,3 +170,6 @@ rawCode: 1
 - DB krasjet, [npx tsx script/seed-bookdragons.tsx] - den hadde wishlist som hindret ID. måtte starte på nytt
 - Nå får kundene oppdatert status om boka er klar til henting eller kanselert
 - Error! får ikke lagt til ny bok via admin
+- problemet var å migrere DB riktig så kunne jeg legge til riktig
+- lagger en felles api.ts for repeterende kode
+- sletting av kunder er implementert på admin siden tredjefane

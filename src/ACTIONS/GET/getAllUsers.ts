@@ -1,16 +1,9 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import { apiPatch } from '@/lib/api'
+import { apiGet } from '@/lib/api'
 
-type OrderStatus = 'behandles' | 'klar_til_henting' | 'hentet' | 'kansellert'
-
-interface UpdateOrderStatusData {
-  orderId: string
-  status: OrderStatus
-}
-
-export async function updateOrderStatus(data: UpdateOrderStatusData) {
+export async function getAllUsers() {
   try {
     const cookieStore = await cookies()
     const authToken = cookieStore.get('authToken')?.value
@@ -19,24 +12,22 @@ export async function updateOrderStatus(data: UpdateOrderStatusData) {
       return {
         success: false,
         error: 'Ikke autorisert',
+        users: [],
       }
     }
 
-    const responseData = await apiPatch(
-      `/api/orders/${data.orderId}`,
-      { status: data.status },
-      authToken,
-    )
+    const response = await apiGet('/api/users', authToken)
 
     return {
       success: true,
-      data: responseData,
+      users: (response as any).docs || [],
     }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error)
     return {
       success: false,
       error: `Feil: ${errorMsg}`,
+      users: [],
     }
   }
 }

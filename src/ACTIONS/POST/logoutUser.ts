@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { apiPost } from '@/lib/api'
 
 export async function logoutUser() {
   try {
@@ -13,11 +14,7 @@ export async function logoutUser() {
 
     // Also call Payload's logout endpoint to invalidate the session
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-      await fetch(`${baseUrl}/api/users/logout`, {
-        method: 'POST',
-        credentials: 'include',
-      })
+      await apiPost('/api/users/logout', {})
     } catch (e) {
       console.error('Failed to call logout endpoint:', e)
     }
