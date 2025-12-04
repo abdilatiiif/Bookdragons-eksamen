@@ -1,68 +1,41 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { getAllOrders } from '@/ACTIONS/GET/getOrders'
+import { updateOrderStatus } from '@/ACTIONS/PUT/orderStatus'
 
 export default function Bestillinger() {
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
-  const [orders, setOrders] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [orders, setOrders] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [updatingOrder, setUpdatingOrder] = useState<string | null>(null)
 
-  const eksempelBestillinger = [
-    {
-      id: 'ORD-001',
-      orderNumber: 'ORD-001',
-      customer: {
-        id: '1',
-        email: 'jon@example.com',
-        name: 'Jon Doe',
-        phone: '98765432',
-      },
-      items: [
-        {
-          id: '1',
-          book: { title: 'Harry Potter og Halvblodsprins', author: 'J.K. Rowling' },
-          quantity: 2,
-          price: 249,
-        },
-        {
-          id: '2',
-          book: { title: 'Dune', author: 'Frank Herbert' },
-          quantity: 1,
-          price: 399,
-        },
-      ],
-      totalAmount: 897,
-      status: 'behandles',
-      createdAt: '2025-12-04T10:30:00Z',
-      readyForPickupAt: null,
-      pickedUpAt: null,
-    },
-    {
-      id: 'ORD-002',
-      orderNumber: 'ORD-002',
-      customer: {
-        id: '2',
-        email: 'maria@example.com',
-        name: 'Maria Jensen',
-        phone: '91234567',
-      },
-      items: [
-        {
-          id: '1',
-          book: { title: '1984', author: 'George Orwell' },
-          quantity: 1,
-          price: 299,
-        },
-      ],
-      totalAmount: 299,
-      status: 'klar_til_henting',
-      createdAt: '2025-12-03T14:20:00Z',
-      readyForPickupAt: '2025-12-04T09:00:00Z',
-      pickedUpAt: null,
-    },
-  ]
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setLoading(true)
+      setError('')
+
+      const result = await getAllOrders()
+
+      if (result.success) {
+        console.log('Fetched orders:', result.data)
+        if (result.data.length > 0) {
+          console.log('First order structure:', result.data[0])
+        }
+        setOrders(result.data)
+      } else {
+        setError(result.error || 'Kunne ikke hente bestillinger')
+      }
+
+      setLoading(false)
+    }
+
+    fetchOrders()
+  }, [])
 
   const statusOptions = ['behandles', 'klar_til_henting', 'hentet', 'kansellert']
 
@@ -87,12 +60,44 @@ export default function Bestillinger() {
     kansellert: 3,
   }
 
-  const sortedOrders = [...eksempelBestillinger].sort((a, b) => {
+  const displayOrders = orders
+
+  const filteredOrders =
+    statusFilter === 'all'
+      ? displayOrders
+      : displayOrders.filter((order: any) => order.status === statusFilter)
+
+  const sortedOrders = [...filteredOrders].sort((a, b) => {
     return (
       statusOrder[a.status as keyof typeof statusOrder] -
       statusOrder[b.status as keyof typeof statusOrder]
     )
   })
+
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    setUpdatingOrder(orderId)
+    setError('')
+
+    console.log('Frontend: Updating order ID:', orderId, 'to status:', newStatus)
+
+    const result = await updateOrderStatus({
+      orderId,
+      status: newStatus as 'behandles' | 'klar_til_henting' | 'hentet' | 'kansellert',
+    })
+
+    console.log('Frontend: Result from updateOrderStatus:', result)
+
+    if (result.success) {
+      // Oppdater orders i state
+      setOrders((prevOrders) =>
+        prevOrders.map((order) => (order.id === orderId ? { ...order, status: newStatus } : order)),
+      )
+    } else {
+      setError(result.error || 'Kunne ikke oppdatere status')
+    }
+
+    setUpdatingOrder(null)
+  }
 
   return (
     <div className="min-h-screen  py-12">
@@ -100,11 +105,35 @@ export default function Bestillinger() {
         <div className=" rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Innkommende bestillinger</h1>
 
+          {/* Status Filter */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Filtrer etter status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="all">Alle bestillinger</option>
+              <option value="behandles">Behandles</option>
+              <option value="klar_til_henting">Klar til henting</option>
+              <option value="hentet">Hentet</option>
+              <option value="kansellert">Kansellert</option>
+            </select>
+          </div>
+
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
+
           {loading ? (
             <div className="text-center py-12">
               <p className="text-gray-600">Laster bestillinger...</p>
             </div>
-          ) : eksempelBestillinger.length === 0 ? (
+          ) : sortedOrders.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600">Ingen bestillinger</p>
             </div>
@@ -197,7 +226,7 @@ export default function Bestillinger() {
                       <div>
                         <h4 className="font-bold text-gray-800 mb-3">Bestilte bøker</h4>
                         <div className="space-y-3 bg-gray-50 rounded-lg p-4">
-                          {order.items.map((item) => (
+                          {order.items.map((item: any) => (
                             <div
                               key={item.id}
                               className="flex justify-between items-center pb-3 border-b border-gray-200 last:border-b-0 last:pb-0"
@@ -232,13 +261,17 @@ export default function Bestillinger() {
                             <Button
                               key={status}
                               variant={order.status === status ? 'default' : 'outline'}
+                              disabled={updatingOrder === order.id}
+                              onClick={() => handleStatusChange(order.id, status)}
                               className={`${
                                 order.status === status
                                   ? 'bg-amber-600 hover:bg-amber-700 text-white'
                                   : ''
                               }`}
                             >
-                              {statusLabels[status as keyof typeof statusLabels]}
+                              {updatingOrder === order.id
+                                ? 'Oppdaterer...'
+                                : statusLabels[status as keyof typeof statusLabels]}
                             </Button>
                           ))}
                         </div>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { createBook } from '@/ACTIONS/POST/createBook'
 
 export default function AddBook() {
   const [formData, setFormData] = useState({
@@ -11,7 +12,7 @@ export default function AddBook() {
     price: '',
     stock: '',
     description: '',
-    genre: [],
+    genre: [] as string[],
     publishedYear: '',
     binding: '',
     language: '',
@@ -22,6 +23,58 @@ export default function AddBook() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setSuccess('')
+
+    try {
+      const result = await createBook({
+        title: formData.title,
+        author: formData.author,
+        price: parseInt(formData.price),
+        stock: parseInt(formData.stock) || 1,
+        description: formData.description,
+        genre: formData.genre,
+        publishedYear: formData.publishedYear ? parseInt(formData.publishedYear) : undefined,
+        binding: formData.binding as 'pocket' | 'hardcover' | 'audiobook' | 'ebook',
+        language: formData.language as 'norwegian' | 'english' | 'other',
+        condition: formData.condition as 'like-new' | 'very-good' | 'good' | 'acceptable',
+        signed: formData.signed as 'signed' | 'unsigned',
+        isbn: formData.isbn,
+      })
+
+      console.log('createBook result:', result)
+
+      if (result.success) {
+        setSuccess('Bok opprettet successfully!')
+        // Reset form
+        setFormData({
+          title: '',
+          author: '',
+          isbn: '',
+          price: '',
+          stock: '',
+          description: '',
+          genre: [],
+          publishedYear: '',
+          binding: '',
+          language: '',
+          condition: '',
+          signed: 'unsigned',
+        })
+      } else {
+        setError(result.error || 'Kunne ikke opprette bok')
+      }
+    } catch (err) {
+      setError('En feil oppstod')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen  py-12">
@@ -41,14 +94,17 @@ export default function AddBook() {
             </div>
           )}
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Tittel *</label>
                 <input
                   type="text"
                   placeholder="Bok tittel"
+                  value={formData.title}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  required
                 />
               </div>
 
@@ -59,7 +115,10 @@ export default function AddBook() {
                 <input
                   type="text"
                   placeholder="Forfatternavn"
+                  value={formData.author}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, author: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  required
                 />
               </div>
 
@@ -68,6 +127,8 @@ export default function AddBook() {
                 <input
                   type="text"
                   placeholder="ISBN"
+                  value={formData.isbn}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, isbn: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 />
               </div>
@@ -77,7 +138,10 @@ export default function AddBook() {
                 <input
                   type="number"
                   placeholder="0"
+                  value={formData.price}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  required
                 />
               </div>
 
@@ -86,7 +150,10 @@ export default function AddBook() {
                 <input
                   type="number"
                   placeholder="0"
+                  value={formData.stock}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, stock: e.target.value }))}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  required
                 />
               </div>
 
@@ -95,44 +162,68 @@ export default function AddBook() {
                 <input
                   type="number"
                   placeholder="2024"
+                  value={formData.publishedYear}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, publishedYear: e.target.value }))
+                  }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Innbinding</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                <select
+                  value={formData.binding}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, binding: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  required
+                >
                   <option value="">Velg innbinding</option>
-                  <option value="hardcover">Hardcover</option>
-                  <option value="paperback">Paperback</option>
+                  <option value="pocket">Pocket</option>
+                  <option value="hardcover">Innbundet</option>
+                  <option value="audiobook">Lydbok</option>
                   <option value="ebook">E-bok</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Språk</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                <select
+                  value={formData.language}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, language: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  required
+                >
                   <option value="">Velg språk</option>
-                  <option value="Norsk">Norsk</option>
-                  <option value="Engelsk">Engelsk</option>
-                  <option value="Svensk">Svensk</option>
-                  <option value="Dansk">Dansk</option>
+                  <option value="norwegian">Norsk</option>
+                  <option value="english">Engelsk</option>
+                  <option value="other">Annet</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Tilstand</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                <select
+                  value={formData.condition}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, condition: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                >
                   <option value="">Velg tilstand</option>
-                  <option value="Som ny">Som ny</option>
-                  <option value="Brukt">Brukt</option>
-                  <option value="Slitt">Slitt</option>
+                  <option value="like-new">Som ny</option>
+                  <option value="very-good">Meget god</option>
+                  <option value="good">God</option>
+                  <option value="acceptable">Akseptabel</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Signert</label>
-                <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                <select
+                  value={formData.signed}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, signed: e.target.value }))}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                  required
+                >
                   <option value="unsigned">Ikke signert</option>
                   <option value="signed">Signert</option>
                 </select>
@@ -140,21 +231,40 @@ export default function AddBook() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Sjanger</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Sjanger *</label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  'Fiksjon',
-                  'Non-fiksjon',
-                  'Barn',
-                  'Ungdom',
-                  'Krim',
-                  'Romantikk',
-                  'Skrekk',
-                  'Fantasy',
-                ].map((genre) => (
-                  <label key={genre} className="flex items-center gap-2">
-                    <input type="checkbox" className="w-4 h-4" />
-                    <span className="text-sm text-gray-700">{genre}</span>
+                  { label: 'Skjønnlitteratur', value: 'fiction' },
+                  { label: 'Krim', value: 'crime' },
+                  { label: 'Fantasy', value: 'fantasy' },
+                  { label: 'Sci-Fi', value: 'scifi' },
+                  { label: 'Romantikk', value: 'romance' },
+                  { label: 'Thriller', value: 'thriller' },
+                  { label: 'Biografi', value: 'biography' },
+                  { label: 'Historie', value: 'history' },
+                  { label: 'Barn', value: 'children' },
+                  { label: 'Ungdom', value: 'youth' },
+                ].map((genreOption) => (
+                  <label key={genreOption.value} className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.genre.includes(genreOption.value)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setFormData((prev) => ({
+                            ...prev,
+                            genre: [...prev.genre, genreOption.value],
+                          }))
+                        } else {
+                          setFormData((prev) => ({
+                            ...prev,
+                            genre: prev.genre.filter((g) => g !== genreOption.value),
+                          }))
+                        }
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm text-gray-700">{genreOption.label}</span>
                   </label>
                 ))}
               </div>
@@ -164,6 +274,8 @@ export default function AddBook() {
               <label className="block text-sm font-semibold text-gray-700 mb-2">Beskrivelse</label>
               <textarea
                 placeholder="Bok beskrivelse"
+                value={formData.description}
+                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
                 rows={5}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
               />

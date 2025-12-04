@@ -161,3 +161,12 @@ rawCode: 1
 - compoentene funker fint med eksempel orders og virker som det skal
 - de er klar tilbruk
 - må lage action servers for å håndere api calls
+
+- lager add book funksjon - inni add book på admin -> Addbook.
+- ny bok kan nå legges til av admin.
+- laget server action for henting av alle ordere av kundene, det må filtreres ut etter status på orderen
+- hadde problemer som jeg slet med lenge NEXT_PUBLIC_SERVER_URL, men i updateOrderStatus brukes NEXT_PUBLIC_PAYLOAD_URL
+- .env filene kom aldri opp på error , fikk bare 500 status
+- DB krasjet, [npx tsx script/seed-bookdragons.tsx] - den hadde wishlist som hindret ID. måtte starte på nytt
+- Nå får kundene oppdatert status om boka er klar til henting eller kanselert
+- Error! får ikke lagt til ny bok via admin

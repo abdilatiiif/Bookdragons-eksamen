@@ -71,7 +71,6 @@ export interface Config {
     media: Media;
     books: Book;
     orders: Order;
-    wishlist: Wishlist;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -83,7 +82,6 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     books: BooksSelect<false> | BooksSelect<true>;
     orders: OrdersSelect<false> | OrdersSelect<true>;
-    wishlist: WishlistSelect<false> | WishlistSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -238,22 +236,6 @@ export interface Order {
   createdAt: string;
 }
 /**
- * Brukerens ønskeliste for bøker
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "wishlist".
- */
-export interface Wishlist {
-  id: number;
-  user: number | User;
-  /**
-   * Bøker som brukeren har lagt til i ønskelisten
-   */
-  books: (number | Book)[];
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -292,10 +274,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'orders';
         value: number | Order;
-      } | null)
-    | ({
-        relationTo: 'wishlist';
-        value: number | Wishlist;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -423,16 +401,6 @@ export interface OrdersSelect<T extends boolean = true> {
   readyForPickupAt?: T;
   pickedUpAt?: T;
   notes?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "wishlist_select".
- */
-export interface WishlistSelect<T extends boolean = true> {
-  user?: T;
-  books?: T;
   updatedAt?: T;
   createdAt?: T;
 }
