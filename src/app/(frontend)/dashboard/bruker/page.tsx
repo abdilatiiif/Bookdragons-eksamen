@@ -1,8 +1,8 @@
 'use client'
 
-import { WishListTab } from '@/components/WishListTab'
-import { OrdersTab } from '@/components/OrdersTab'
-import { ProfileTab } from '@/components/ProfileTab'
+import { WishListTab } from '@/components/dashboard/WishListTab'
+import { OrdersTab } from '@/components/dashboard/OrdersTab'
+import { ProfileTab } from '@/components/dashboard/ProfileTab'
 import { useState } from 'react'
 import Link from 'next/link'
 

@@ -171,22 +171,6 @@ export function ProfileTab() {
           </div>
         )}
       </div>
-
-      {/* Danger Zone */}
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-        <h3 className="text-lg font-bold text-red-800 mb-2">Faresone</h3>
-        <p className="text-sm text-red-700 mb-4">
-          Disse handlingene kan ikke angres. Vennligst vær forsiktig.
-        </p>
-        <div className="flex gap-3">
-          <button className="px-4 py-2 border-2 border-red-600 text-red-600 rounded-lg font-semibold hover:bg-red-600 hover:text-white transition">
-            Deaktiver konto
-          </button>
-          <button className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition">
-            Slett konto
-          </button>
-        </div>
-      </div>
     </div>
   )
 }

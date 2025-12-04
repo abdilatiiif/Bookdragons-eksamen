@@ -68,7 +68,7 @@ If you have any issues or questions, reach out to us on [Discord](https://discor
 
 // logg:
 
-1.des
+#1.des
 start av payload prosjekt - git init
 
 - Laster ned tailwind, shadcn, icons
@@ -84,7 +84,7 @@ start av payload prosjekt - git init
 
 -Payload anbefaler og som unngår feil, migrasjonsproblemer og databasekræsj. payload LOCAL api
 
-2.des
+##2.des
 
 - lager ferdig filter componenten, både mobil og desktop
 - lager slugs books , legger til collections
@@ -110,7 +110,7 @@ legge inn books inni i data basen:
 - Filter funksjonen skal funke, må trykke bruk filter knapp
 - https://www.norli.no/boker - componenten
 
-  3.des
+  ###3.des
 
 - filter funksjonalitet utbedres
 - sjanger filter funker ikke, må legge til manuelt via admin
@@ -124,4 +124,13 @@ legge inn books inni i data basen:
 - auth funker, bruker kan opprettes, logg inn og ut blir lagret og fjernet som tokens, cookies
 - har begrenset rettigheter på brukere gjennom collections
 - eksperimentere på slugs kjøp/behandling/status på bøkene, admin rettigheter
+
+####4.des
+
+- debugg imgrasjons feil pga endring i user, orders, slugproblemer
+- bruker skal klikke på kjøp som tar med videre til handlekurv,
+- prøver å legge til hindring at man ikke kan kjøpe mer enn det som er på lager, laget stock prop
+- lage update order action
+- når bruker betaler skal det kkomme under ordere, som vises på siden
+- du må nå være logget inn for å kunne kjøpe, du blir referert tilbake til logginsiden
 -

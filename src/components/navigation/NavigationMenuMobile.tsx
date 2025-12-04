@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/accordion'
 
 import * as React from 'react'
-import { ArrowDownRight } from 'lucide-react'
+import { ArrowDownRight, ShoppingCart } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -30,6 +30,7 @@ import { Input } from '../ui/input'
 export function NavigationMenuMobile() {
   const router = useRouter()
   const [user, setUser] = React.useState<any>(null)
+  const [cartCount, setCartCount] = React.useState(0)
 
   const checkUser = React.useCallback(() => {
     const cookies = document.cookie.split(';')
@@ -46,11 +47,29 @@ export function NavigationMenuMobile() {
     }
   }, [])
 
+  const updateCartCount = React.useCallback(() => {
+    const cart = localStorage.getItem('cart')
+    if (cart) {
+      const items = JSON.parse(cart)
+      const total = items.reduce((sum: number, item: any) => sum + item.quantity, 0)
+      setCartCount(total)
+    } else {
+      setCartCount(0)
+    }
+  }, [])
+
   React.useEffect(() => {
     checkUser()
+    updateCartCount()
     const interval = setInterval(checkUser, 1000)
-    return () => clearInterval(interval)
-  }, [checkUser])
+    window.addEventListener('storage', updateCartCount)
+    window.addEventListener('cartUpdated', updateCartCount)
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('storage', updateCartCount)
+      window.removeEventListener('cartUpdated', updateCartCount)
+    }
+  }, [checkUser, updateCartCount])
 
   const handleLogout = async () => {
     await logoutUser()
@@ -100,6 +119,21 @@ export function NavigationMenuMobile() {
                   <ArrowDownRight className="ml-2 h-4 w-4" />
                 </Link>
               ))}
+
+              {/* Cart Link */}
+              <Link
+                href="/cart"
+                className="flex items-center w-full border-2 rounded-lg p-2 bg-blue-200 transition-all relative"
+              >
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Kurv
+                {cartCount > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-xs font-bold rounded-full px-2 py-1">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+
               {user ? (
                 <div className="flex w-full flex-col gap-2 mt-2">
                   <Link
