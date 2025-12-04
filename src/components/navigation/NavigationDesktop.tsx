@@ -71,7 +71,7 @@ export function NavigationDesktop() {
                 <NavigationMenuLink asChild>
                   <Link href="/auth/login">
                     Logg inn/registrer
-                    <div className="text-muted-foreground">
+                    <div className="text-muted-foreground p-2 rounded-2xl bg-green-400">
                       Få tilgang til din konto for å administrere bestillinger
                     </div>
                   </Link>

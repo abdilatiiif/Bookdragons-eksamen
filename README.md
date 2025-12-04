@@ -173,3 +173,5 @@ rawCode: 1
 - problemet var å migrere DB riktig så kunne jeg legge til riktig
 - lagger en felles api.ts for repeterende kode
 - sletting av kunder er implementert på admin siden tredjefane
+
+- Søkeinput felt skal

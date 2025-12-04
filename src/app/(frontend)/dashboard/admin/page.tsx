@@ -1,4 +1,5 @@
 import { AdmindashBoardContainer } from '@/components/adminDashboard/AdmindashBoardContainer'
+import { Button } from '@/components/ui/button'
 import { BookOpen } from 'lucide-react'
 import Link from 'next/link'
 
@@ -30,6 +31,10 @@ function page() {
           <AdmindashBoardContainer />{' '}
         </div>
       </div>
+      <Button>
+        {' '}
+        For Backend- <Link href="/admin">Settings</Link>{' '}
+      </Button>
     </div>
   )
 }
