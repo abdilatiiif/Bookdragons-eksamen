@@ -155,3 +155,32 @@ rawCode: 1
 - omdiringering til admin dashboard hvis role er admin
 - gjorde om på nav - ingen kurv eller kjøp på admin bruker. og bruker knappen skal til den bestemte userRole - /admin eller /bruker
 - Accordion fra shadcn for admin siden
+- lager admin dashboard med å legge til bok, med samme info som slugs, component først uten funksjoner
+- laget innkommende besttlinger uten fuksjoner, det skal kunne sortes etter status på varene
+- og siste tab med bruker liste over alle kundene butikken har. så kan de slette brukere etter ønske
+- compoentene funker fint med eksempel orders og virker som det skal
+- de er klar tilbruk
+- må lage action servers for å håndere api calls
+
+- lager add book funksjon - inni add book på admin -> Addbook.
+- ny bok kan nå legges til av admin.
+- laget server action for henting av alle ordere av kundene, det må filtreres ut etter status på orderen
+- hadde problemer som jeg slet med lenge NEXT_PUBLIC_SERVER_URL, men i updateOrderStatus brukes NEXT_PUBLIC_PAYLOAD_URL
+- .env filene kom aldri opp på error , fikk bare 500 status
+- DB krasjet, [npx tsx script/seed-bookdragons.tsx] - den hadde wishlist som hindret ID. måtte starte på nytt
+- Nå får kundene oppdatert status om boka er klar til henting eller kanselert
+- Error! får ikke lagt til ny bok via admin
+
+  5.des
+
+- problemet var å migrere DB riktig så kunne jeg legge til riktig
+- lagger en felles api.ts for repeterende kode
+- sletting av kunder er implementert på admin siden tredjefane
+
+  6.des
+
+- sjanger ble ikke med på cvs fill, mååte om skrive filtersider section
+- add host name to next js config,
+- bugg sjanger/genre passa ikke med cvs filen, collections, filter, og add book filter
+
+tiltenkt funksjonalitet : når bok behandles ferdig , skal skal antallet trekkes fra lager status antallet

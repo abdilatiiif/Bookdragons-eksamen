@@ -96,6 +96,8 @@ export const Books: CollectionConfig = {
         { label: 'Historie', value: 'history' },
         { label: 'Barn', value: 'children' },
         { label: 'Ungdom', value: 'youth' },
+        { label: 'Skrekk', value: 'skrekk' },
+        { label: 'Mytologi', value: 'mythology' },
       ],
     },
     {

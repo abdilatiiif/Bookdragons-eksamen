@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { apiPost } from '@/lib/api'
 
 interface OrderItem {
   book: string
@@ -27,35 +28,18 @@ export async function putOrder(orderData: CreateOrderData) {
       }
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const result = await apiPost('/api/orders', orderData, authToken)
 
-    const response = await fetch(`${baseUrl}/api/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(orderData),
-    })
-
-    if (!response.ok) {
-      const errorData = await response.json()
-      return {
-        success: false,
-        error: errorData.message || 'Feil ved opprettelse av ordre',
-      }
-    }
-
-    const result = await response.json()
     return {
       success: true,
       data: result,
     }
   } catch (error) {
-    console.error('putOrder error:', error)
+    const errorMsg = error instanceof Error ? error.message : String(error)
+    console.error('putOrder error:', errorMsg)
     return {
       success: false,
-      error: 'Noe gikk galt. Prøv igjen.',
+      error: `Feil: ${errorMsg}`,
     }
   }
 }

@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/navigation-menu'
 import { Input } from '@/components/ui/input'
 import { Car, Flame, Plane, Sailboat } from 'lucide-react'
+import SearchInputNav from './SearchInputNav'
 
 export function NavigationDesktop() {
   return (
@@ -38,12 +39,12 @@ export function NavigationDesktop() {
         <NavigationMenuItem className=" md:block">
           <NavigationMenuTrigger>
             {' '}
-            <Link href="/events">Eventer</Link>
+            <Link href="/ikkenodvendig">Eventer</Link>
           </NavigationMenuTrigger>
         </NavigationMenuItem>
         <NavigationMenuItem className=" md:block">
           <NavigationMenuTrigger>
-            <Link href="/articles">Artikkler</Link>
+            <Link href="/ikkenodvendig">Artikkler</Link>
           </NavigationMenuTrigger>
         </NavigationMenuItem>
         <NavigationMenuItem className=" md:block">
@@ -52,7 +53,7 @@ export function NavigationDesktop() {
             <ul className="grid w-[300px] gap-4">
               <li>
                 <NavigationMenuLink asChild>
-                  <Link href="/about">
+                  <Link href="/ikkenodvendig">
                     Om Oss
                     <div className="text-muted-foreground">
                       Lær mer om BookDragons, vårt team og vår lidenskap for bøker.
@@ -60,7 +61,7 @@ export function NavigationDesktop() {
                   </Link>
                 </NavigationMenuLink>
                 <NavigationMenuLink asChild>
-                  <Link href="/contact">
+                  <Link href="/ikkenodvendig">
                     Kontakt & Support
                     <div className="text-muted-foreground">
                       Kontakt oss for spørsmål, support og hjelp med våre tjenester.
@@ -69,9 +70,9 @@ export function NavigationDesktop() {
                 </NavigationMenuLink>
 
                 <NavigationMenuLink asChild>
-                  <Link href="/login">
+                  <Link href="/auth/login">
                     Logg inn/registrer
-                    <div className="text-muted-foreground">
+                    <div className="text-muted-foreground p-2 rounded-2xl bg-green-400">
                       Få tilgang til din konto for å administrere bestillinger
                     </div>
                   </Link>
@@ -81,10 +82,7 @@ export function NavigationDesktop() {
           </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
-      <Input
-        placeholder="Søk etter bok..."
-        className=" mx-4 bl-2 p-2 bl-2 rounded-lg bg-green-50 min-w-[140px] shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-      />
+      <SearchInputNav />
     </NavigationMenu>
   )
 }

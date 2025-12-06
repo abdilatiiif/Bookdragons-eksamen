@@ -76,11 +76,11 @@ export function NavigationMenuMobile() {
 
   const navLinks = [
     { title: 'Hjem', href: '/' },
-    { title: 'Eventer', href: '/events' },
-    { title: 'Artikler', href: '/articles' },
+    { title: 'Eventer', href: '/ikkenodvendig', no: 'bg-red-500' },
+    { title: 'Artikler', href: '/ikkenodvendig', no: 'bg-red-500' },
     { title: 'Bøker', href: '/books' },
-    { title: 'Om oss', href: '/about' },
-    { title: 'Kontakt', href: '/contact' },
+    { title: 'Om oss', href: '/ikkenodvendig', no: 'bg-red-500' },
+    { title: 'Kontakt', href: '/ikkenodvendig', no: 'bg-red-500' },
   ]
   return (
     <Sheet>
@@ -100,7 +100,7 @@ export function NavigationMenuMobile() {
                 <Link
                   key={link.title}
                   href={link.href}
-                  className="flex slide-in-right items-center w-full border-2 rounded-lg p-2 bg-[#eab676] transition-all"
+                  className={`flex slide-in-right items-center w-full border-2 rounded-lg p-2 transition-all ${link.no ? link.no : 'bg-[#eab676]'}`}
                 >
                   {link.title}
 

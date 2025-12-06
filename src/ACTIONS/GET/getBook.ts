@@ -4,8 +4,6 @@ import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 
 export async function getBook(id: string) {
-  console.log(id)
-
   try {
     const payload = await getPayload({ config: configPromise })
 

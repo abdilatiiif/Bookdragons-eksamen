@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Heart, ShoppingCart, Minus, Plus, ArrowLeft, Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 function BookDetail({ book }: { book: any }) {
   const router = useRouter()
@@ -13,20 +14,6 @@ function BookDetail({ book }: { book: any }) {
 
   const seed = encodeURIComponent(book?.id ?? book?.isbn ?? book?.title ?? 'default')
   const imgSrc = `https://picsum.photos/seed/${seed}/400/600`
-
-  const handleIncrement = () => {
-    if (quantity < book.stock) {
-      setQuantity(quantity + 1)
-      setAddedToCart(false)
-    }
-  }
-
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
-      setAddedToCart(false)
-    }
-  }
 
   const handleAddToCart = () => {
     const cart = localStorage.getItem('cart')
@@ -71,6 +58,24 @@ function BookDetail({ book }: { book: any }) {
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Image Section */}
+        <div className="flex justify-center items-start">
+          <div className="relative">
+            <Image
+              src={imgSrc}
+              alt={book.title}
+              className="w-[300px]  max-w-md h-auto rounded-lg shadow-2xl "
+              width={400}
+              height={600}
+            />
+            {book.signed === 'signed' && (
+              <div className="absolute top-4 right-4 bg-amber-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">
+                ✍️ Signert
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Info Section */}
         <div className="flex flex-col">
           <div className="mb-6">

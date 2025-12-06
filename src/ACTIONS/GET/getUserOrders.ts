@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { apiGet } from '@/lib/api'
 
 export async function getUserOrders() {
   try {
@@ -11,40 +12,13 @@ export async function getUserOrders() {
       return { success: false, orders: [] }
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+    const userData = await apiGet('/api/users/me', token)
+    const userId = (userData as any).user.id
 
-    // First get current user to get their ID
-    const userRes = await fetch(`${baseUrl}/api/users/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      credentials: 'include',
-      cache: 'no-store',
-    })
+    const ordersData = await apiGet(`/api/orders?where[customer][equals]=${userId}&depth=2`, token)
 
-    if (!userRes.ok) {
-      return { success: false, orders: [] }
-    }
-
-    const userData = await userRes.json()
-    const userId = userData.user.id
-
-    // Fetch orders for this user
-    const ordersRes = await fetch(
-      `${baseUrl}/api/orders?where[customer][equals]=${userId}&depth=2`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-        credentials: 'include',
-        cache: 'no-store',
-      },
-    )
-
-    if (!ordersRes.ok) {
-      return { success: false, orders: [] }
-    }
-
-    const ordersData = await ordersRes.json()
-    return { success: true, orders: ordersData.docs || [] }
+    return { success: true, orders: (ordersData as any).docs || [] }
   } catch (e: any) {
-    console.error('getUserOrders error:', e)
     return { success: false, orders: [] }
   }
 }

@@ -43,6 +43,10 @@ export const Users: CollectionConfig = {
       required: true,
     },
     {
+      name: 'phone',
+      type: 'text',
+    },
+    {
       name: 'role',
       type: 'select',
       required: true,

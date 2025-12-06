@@ -6,8 +6,6 @@ function Book({ book }: { book: any }) {
   const seed = encodeURIComponent(book?.id ?? book?.isbn ?? book?.title ?? String(Math.random()))
   const imgSrc = `https://picsum.photos/seed/${seed}/400/500`
 
-  console.log(book)
-
   function handleClick() {
     console.log(`Book "${book.title}" clicked!`)
     const bookUrl = `/books/${book.id}`
@@ -41,9 +39,24 @@ function Book({ book }: { book: any }) {
       <div className="p-5 bg-gray-50">
         <div className="flex items-center justify-between mb-2">
           <p className="text-sm text-gray-600">{book.author}</p>
-          <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded font-semibold">
-            {book.genre}
-          </span>
+          {book.genre && (
+            <div className="flex gap-1 flex-wrap">
+              {Array.isArray(book.genre) ? (
+                book.genre.slice(0, 2).map((g: string) => (
+                  <span
+                    key={g}
+                    className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded font-semibold"
+                  >
+                    {g}
+                  </span>
+                ))
+              ) : (
+                <span className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded font-semibold">
+                  {book.genre}
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         <h3 className="text-lg font-bold text-gray-800 mb-1 leading-tight">{book.title}</h3>
