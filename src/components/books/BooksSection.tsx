@@ -78,7 +78,7 @@ function BooksSection() {
     }
 
     fetchBooks()
-  }, [searchParams])
+  }, [searchParams]) // endring tar i effekt umiddelbart
 
   return (
     <div className="py-25 px-10 z-20 flex flex-col w-full">

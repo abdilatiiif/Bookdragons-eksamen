@@ -192,6 +192,8 @@ export interface Book {
         | 'history'
         | 'children'
         | 'youth'
+        | 'skrekk'
+        | 'mythology'
       )[]
     | null;
   isbn?: string | null;

@@ -179,7 +179,8 @@ rawCode: 1
 
   6.des
 
-- Søkeinput felt skal kunne søkes på via search params
--
+- sjanger ble ikke med på cvs fill, mååte om skrive filtersider section
+- add host name to next js config,
+- bugg sjanger/genre passa ikke med cvs filen, collections, filter, og add book filter
 
 tiltenkt funksjonalitet : når bok behandles ferdig , skal skal antallet trekkes fra lager status antallet

@@ -244,6 +244,8 @@ export default function AddBook() {
                   { label: 'Historie', value: 'history' },
                   { label: 'Barn', value: 'children' },
                   { label: 'Ungdom', value: 'youth' },
+                  { label: 'Skrekk', value: 'skrekk' },
+                  { label: 'Mytologi', value: 'mythology' },
                 ].map((genreOption) => (
                   <label key={genreOption.value} className="flex items-center gap-2">
                     <input
