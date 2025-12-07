@@ -57,9 +57,9 @@ passord: 123456
 ### **CMS & Database**
 
 - **Payload CMS 3.65.0** - Headless CMS
-- **@payloadcms/db-sqlite** - SQLite database adapter
+- **@payloadcms/db-postgres** - PostgreSQL database adapter
 - **@payloadcms/richtext-lexical** - Rich text editor
-- **PostgreSQL** - Produksjonsdatabase (via DATABASE_URI)
+- **PostgreSQL** - Produksjonsdatabase (Railway/Supabase)
 
 ### **Styling**
 
@@ -179,7 +179,7 @@ Railway er den enkleste løsningen for fullstack Next.js-apper med PostgreSQL.
 
 4. **Sett miljøvariabler**
 
-   Gå til Settings → Variables:
+   Gå til Settings → Variables og legg til:
 
    ```env
    DATABASE_URI=${{Postgres.DATABASE_URL}}
@@ -187,6 +187,12 @@ Railway er den enkleste løsningen for fullstack Next.js-apper med PostgreSQL.
    NEXT_PUBLIC_SERVER_URL=https://your-app.up.railway.app
    NODE_ENV=production
    ```
+
+   **Viktig!** Railway gir deg to connection strings:
+   - `DATABASE_URL` (intern) - Brukes **automatisk** via `${{Postgres.DATABASE_URL}}`
+   - `DATABASE_PUBLIC_URL` (ekstern) - Ikke nødvendig på Railway
+
+   Bruk **alltid** `${{Postgres.DATABASE_URL}}` for `DATABASE_URI` - Railway fyller inn riktig verdi automatisk.
 
 5. **Konfigurer build**
 
@@ -206,7 +212,20 @@ Railway er den enkleste løsningen for fullstack Next.js-apper med PostgreSQL.
    - Railway deployer automatisk (tar 3-5 min)
    - Du får en URL: `https://bookdragons-xxxxx.up.railway.app`
 
-7. **Opprett admin-bruker**
+7. **Finn domenenavnet ditt**
+
+   **Hvor finner jeg domenet?**
+   - Gå til Railway Dashboard → ditt prosjekt
+   - Klikk på **Next.js-servicen** (ikke PostgreSQL)
+   - Settings → Networking → Public Networking
+   - Kopier URL-en: `https://bookdragons-xxxxx.up.railway.app`
+
+   **Bruk denne URL-en til:**
+   - Sett som `NEXT_PUBLIC_SERVER_URL` i Railway Variables
+   - Åpne appen i nettleseren
+   - Admin panel: `https://din-url.up.railway.app/admin`
+
+8. **Opprett admin-bruker**
    - Gå til `https://din-url.up.railway.app/admin`
    - Registrer første admin-bruker
 
