@@ -46,6 +46,8 @@ pnpm dev
 brukernavn: latif_1995@test.no
 passord: 123456
 
+hvis ikke bruker funker lag ny via payload [/admin](http://localhost:3000/admin)
+
 ## 📦 Teknologier og Pakker
 
 ### **Core Framework**
@@ -153,131 +155,8 @@ pnpm start              # Kjør produksjonsserver
 - ✅ Type-safe med TypeScript
 - ✅ Sentraliserte API utilities (`src/lib/api.ts`)
 
-## 🚢 Deploy
 
-### **Railway (Anbefalt)**
 
-Railway er den enkleste løsningen for fullstack Next.js-apper med PostgreSQL.
-
-**Steg-for-steg:**
-
-1. **Push kode til GitHub**
-   ```bash
-   git add .
-   git commit -m "Ready for deployment"
-   git push origin main
-````
-
-2. **Opprett Railway-prosjekt**
-   - Gå til [railway.app](https://railway.app) og logg inn
-   - Klikk "New Project" → "Deploy from GitHub repo"
-   - Velg `Bookdragons-eksamen`
-
-3. **Legg til PostgreSQL**
-   - I prosjektet: Klikk "New" → "Database" → "Add PostgreSQL"
-   - Railway lager automatisk `DATABASE_URL`
-
-4. **Sett miljøvariabler**
-
-   Gå til Settings → Variables og legg til:
-
-   ```env
-   DATABASE_URI=${{Postgres.DATABASE_URL}}
-   PAYLOAD_SECRET=lag-en-sikker-tilfeldig-string-her-minimum-32-tegn
-   NEXT_PUBLIC_SERVER_URL=https://your-app.up.railway.app
-   NODE_ENV=production
-   ```
-
-   **Viktig!** Railway gir deg to connection strings:
-   - `DATABASE_URL` (intern) - Brukes **automatisk** via `${{Postgres.DATABASE_URL}}`
-   - `DATABASE_PUBLIC_URL` (ekstern) - Ikke nødvendig på Railway
-
-   Bruk **alltid** `${{Postgres.DATABASE_URL}}` for `DATABASE_URI` - Railway fyller inn riktig verdi automatisk.
-
-5. **Konfigurer build**
-
-   Settings → Build Command:
-
-   ```bash
-   pnpm install && pnpm payload migrate && pnpm build
-   ```
-
-   Start Command:
-
-   ```bash
-   pnpm start
-   ```
-
-6. **Deploy**
-   - Railway deployer automatisk (tar 3-5 min)
-   - Du får en URL: `https://bookdragons-xxxxx.up.railway.app`
-
-7. **Finn domenenavnet ditt**
-
-   **Hvor finner jeg domenet?**
-   - Gå til Railway Dashboard → ditt prosjekt
-   - Klikk på **Next.js-servicen** (ikke PostgreSQL)
-   - Settings → Networking → Public Networking
-   - Kopier URL-en: `https://bookdragons-xxxxx.up.railway.app`
-
-   **Bruk denne URL-en til:**
-   - Sett som `NEXT_PUBLIC_SERVER_URL` i Railway Variables
-   - Åpne appen i nettleseren
-   - Admin panel: `https://din-url.up.railway.app/admin`
-
-8. **Opprett admin-bruker**
-   - Gå til `https://din-url.up.railway.app/admin`
-   - Registrer første admin-bruker
-
----
-
-### **Vercel (Alternativ)**
-
-1. **Installer Vercel CLI**
-
-   ```bash
-   npm i -g vercel
-   vercel login
-   ```
-
-2. **Deploy**
-
-   ```bash
-   vercel --prod
-   ```
-
-3. **Sett miljøvariabler** (i Vercel Dashboard → Settings → Environment Variables):
-
-   ```env
-   DATABASE_URI=postgresql://user:pass@host:5432/db
-   PAYLOAD_SECRET=your-secret-key
-   NEXT_PUBLIC_SERVER_URL=https://your-app.vercel.app
-   ```
-
-4. **Ekstern database påkrevd**
-   - Bruk Railway PostgreSQL eller Supabase
-   - Kopier connection string til `DATABASE_URI`
-
----
-
-### **Feilsøking**
-
-**Problem:** "Cannot connect to database"  
-✅ Sjekk at `DATABASE_URI` er riktig formatert  
-✅ Verifiser at databasen tillater eksterne tilkoblinger
-
-**Problem:** "Payload secret required"  
-✅ Sett `PAYLOAD_SECRET` (minimum 32 tegn)  
-✅ Bruk: `openssl rand -base64 32` for å generere
-
-**Problem:** Migration fails  
-✅ Kjør `pnpm payload migrate` manuelt via Railway shell  
-✅ Eller legg til i build command
-
-**Problem:** Images not loading  
-✅ Sjekk at `picsum.photos` er i `next.config.mjs` → `images.remotePatterns`
-
----
 
 ## 📋 Utviklingslogg
 
@@ -403,3 +282,4 @@ tiltenkt funksjonalitet : når bok behandles ferdig , skal skal antallet trekkes
 ```
 
 ```
+````
