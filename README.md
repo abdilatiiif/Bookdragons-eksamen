@@ -15,8 +15,8 @@ En fullstack nettbutikk for brukte bøker bygget med **Next.js 15**, **Payload C
 1. **Klon prosjektet** -https://github.com/abdilatiiif/Bookdragons-eksamen
 
 # 1. Installer avhengigheter
-npm install -g pnpm      ( for windows)
-pnpm install
+ - npm install -g pnpm  ( for windows)
+ - pnpm install (mac)
 
 # 2. Opprett .env fil (kopier fra .env.example)
 
