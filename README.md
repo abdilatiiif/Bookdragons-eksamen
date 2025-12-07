@@ -41,9 +41,10 @@ pnpm dev
 - Frontend: `http://localhost:3000`
 - Admin Panel: `http://localhost:3000/admin`
 
-### Opprett første admin-bruker
+### admin-bruker
 
-Første gang du åpner `/admin`, vil du bli bedt om å registrere en admin-bruker.
+brukernavn: latif_1995@test.no
+passord: 123456
 
 ## 📦 Teknologier og Pakker
 
