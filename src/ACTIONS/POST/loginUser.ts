@@ -8,6 +8,7 @@ interface LoginResponse {
   success: boolean
   message?: string
   user?: any
+  userRole?: string
 }
 
 export async function loginUser(email: string, password: string): Promise<LoginResponse> {
@@ -52,6 +53,7 @@ export async function loginUser(email: string, password: string): Promise<LoginR
     return {
       success: true,
       user: result.user,
+      userRole: result.user.role,
     }
   } catch (error: any) {
     return {
