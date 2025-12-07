@@ -12,46 +12,34 @@ En fullstack nettbutikk for brukte bøker bygget med **Next.js 15**, **Payload C
 
 ### Installasjon
 
-1. **Klon prosjektet**
+1. **Klon prosjektet** -https://github.com/abdilatiiif/Bookdragons-eksamen
 
-   ```bash
-   git clone <repo-url>
-   cd bookdragons
-   ```
+# 1. Installer avhengigheter
 
-2. **Installer avhengigheter**
+pnpm install
 
-   pnpm install
+# 2. Opprett .env fil (kopier fra .env.example)
 
-3. **Sett opp miljøvariabler**
+# Fyll inn DATABASE_URI, PAYLOAD_SECRET, og NEXT_PUBLIC_SERVER_URL
 
-   Opprett `.env` fil i root:
+Opprett `.env` fil i root:
 
-   ```env
-   DATABASE_URI=postgresql://username:password@localhost:5432/bookdragons
-   PAYLOAD_SECRET=din-hemmelige-nøkkel-her
-   NEXT_PUBLIC_SERVER_URL=http://localhost:3000
-   ```
+# 3. Kjør database migrasjoner
 
-4. **Kjør databasemigrasjoner**
+pnpm payload migrate
 
-   ```bash
-   pnpm payload migrate
-   ```
+# 4. Seed database med bøker (viktig!)
 
-5. **Start utviklingsserver**
+npx tsx script/seed-bookdragons.tsx
 
-   ```bash
-   pnpm dev
-   ```
+# 5. Start utviklingsserver
 
-6. **Åpne appen**
-   - Frontend: `http://localhost:3000`
-   - Admin Panel: `http://localhost:3000/admin`
+pnpm dev
 
-7. \*\*hvis bøker ikke kommer opp. kjør [npx tsx script/seed-bookdragons.tsx]
+## 6 Åpne appen\*\*
 
-- dette fyller opp DB med bøker fra cvs filen
+- Frontend: `http://localhost:3000`
+- Admin Panel: `http://localhost:3000/admin`
 
 ### Opprett første admin-bruker
 
@@ -117,19 +105,6 @@ pnpm devsafe            # Reset .next og start dev
 pnpm build              # Build for produksjon
 pnpm start              # Kjør produksjonsserver
 
-# Testing
-pnpm test               # Kjør alle tester
-pnpm test:e2e           # Playwright E2E tests
-pnpm test:int           # Vitest integration tests
-
-# Payload
-pnpm payload            # Payload CLI
-pnpm generate:types     # Generer TypeScript types
-pnpm generate:importmap # Generer import map
-
-# Kode kvalitet
-pnpm lint               # Kjør ESLint
-```
 
 ## 🗄️ Collections
 
@@ -297,3 +272,4 @@ rawCode: 1
 - bugg sjanger/genre passa ikke med cvs filen, collections, filter, og add book filter
 
 tiltenkt funksjonalitet : når bok behandles ferdig , skal skal antallet trekkes fra lager status antallet
+```
