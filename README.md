@@ -1,70 +1,183 @@
-# Payload Blank Template
+# 📚 Bookdragons - Online Bokhandel
 
-This template comes configured with the bare minimum to get started on anything you need.
+En fullstack nettbutikk for brukte bøker bygget med **Next.js 15**, **Payload CMS 3**, **TypeScript** og **Tailwind CSS**.
 
-## Quick start
+## 🚀 Kom i gang
 
-This template can be deployed directly from our Cloud hosting and it will setup MongoDB and cloud S3 object storage for media.
+### Forutsetninger
 
-## Quick Start - local setup
+- **Node.js**: `^18.20.2` eller `>=20.9.0`
+- **pnpm**: `^9` eller `^10`
+- **PostgreSQL**: Database (lokal eller ekstern)
 
-To spin up this template locally, follow these steps:
+### Installasjon
 
-### Clone
+1. **Klon prosjektet**
 
-After you click the `Deploy` button above, you'll want to have standalone copy of this repo on your machine. If you've already cloned this repo, skip to [Development](#development).
+   ```bash
+   git clone <repo-url>
+   cd bookdragons
+   ```
 
-### Development
+2. **Installer avhengigheter**
 
-1. First [clone the repo](#clone) if you have not done so already
-2. `cd my-project && cp .env.example .env` to copy the example environment variables. You'll need to add the `MONGODB_URI` from your Cloud project to your `.env` if you want to use S3 storage and the MongoDB database that was created for you.
+   pnpm install
 
-3. `pnpm install && pnpm dev` to install dependencies and start the dev server
-4. open `http://localhost:3000` to open the app in your browser
+3. **Sett opp miljøvariabler**
 
-That's it! Changes made in `./src` will be reflected in your app. Follow the on-screen instructions to login and create your first admin user. Then check out [Production](#production) once you're ready to build and serve your app, and [Deployment](#deployment) when you're ready to go live.
+   Opprett `.env` fil i root:
 
-#### Docker (Optional)
+   ```env
+   DATABASE_URI=postgresql://username:password@localhost:5432/bookdragons
+   PAYLOAD_SECRET=din-hemmelige-nøkkel-her
+   NEXT_PUBLIC_SERVER_URL=http://localhost:3000
+   ```
 
-If you prefer to use Docker for local development instead of a local MongoDB instance, the provided docker-compose.yml file can be used.
+4. **Kjør databasemigrasjoner**
 
-To do so, follow these steps:
+   ```bash
+   pnpm payload migrate
+   ```
 
-- Modify the `MONGODB_URI` in your `.env` file to `mongodb://127.0.0.1/<dbname>`
-- Modify the `docker-compose.yml` file's `MONGODB_URI` to match the above `<dbname>`
-- Run `docker-compose up` to start the database, optionally pass `-d` to run in the background.
+5. **Start utviklingsserver**
 
-## How it works
+   ```bash
+   pnpm dev
+   ```
 
-The Payload config is tailored specifically to the needs of most websites. It is pre-configured in the following ways:
+6. **Åpne appen**
+   - Frontend: `http://localhost:3000`
+   - Admin Panel: `http://localhost:3000/admin`
 
-### Collections
+7. \*\*hvis bøker ikke kommer opp. kjør [npx tsx script/seed-bookdragons.tsx]
 
-See the [Collections](https://payloadcms.com/docs/configuration/collections) docs for details on how to extend this functionality.
+- dette fyller opp DB med bøker fra cvs filen
 
-- #### Users (Authentication)
+### Opprett første admin-bruker
 
-  Users are auth-enabled collections that have access to the admin panel.
+Første gang du åpner `/admin`, vil du bli bedt om å registrere en admin-bruker.
 
-  For additional help, see the official [Auth Example](https://github.com/payloadcms/payload/tree/main/examples/auth) or the [Authentication](https://payloadcms.com/docs/authentication/overview#authentication-overview) docs.
+## 📦 Teknologier og Pakker
 
-- #### Media
+### **Core Framework**
 
-  This is the uploads enabled collection. It features pre-configured sizes, focal point and manual resizing to help you manage your pictures.
+- **Next.js 15.4.7** - React framework med App Router
+- **React 19.1.0** - UI bibliotek
+- **TypeScript 5.7.3** - Type-sikkerhet
 
-### Docker
+### **CMS & Database**
 
-Alternatively, you can use [Docker](https://www.docker.com) to spin up this template locally. To do so, follow these steps:
+- **Payload CMS 3.65.0** - Headless CMS
+- **@payloadcms/db-sqlite** - SQLite database adapter
+- **@payloadcms/richtext-lexical** - Rich text editor
+- **PostgreSQL** - Produksjonsdatabase (via DATABASE_URI)
 
-1. Follow [steps 1 and 2 from above](#development), the docker-compose file will automatically use the `.env` file in your project root
-1. Next run `docker-compose up`
-1. Follow [steps 4 and 5 from above](#development) to login and create your first admin user
+### **Styling**
 
-That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
+- **Tailwind CSS 4.1.17** - Utility-first CSS
+- **Radix UI** - Headless UI komponenter
+  - `@radix-ui/react-dialog`
+  - `@radix-ui/react-dropdown-menu`
+  - `@radix-ui/react-navigation-menu`
+  - `@radix-ui/react-accordion`
+  - `@radix-ui/react-tooltip`
+- **lucide-react** - Ikoner
+- **animate.css** - Animasjoner
+- **next-themes** - Dark/Light mode
 
-## Questions
+### **Utilities**
 
-If you have any issues or questions, reach out to us on [Discord](https://discord.com/invite/payload) or start a [GitHub discussion](https://github.com/payloadcms/payload/discussions).
+- **clsx** + **tailwind-merge** - Conditional styling
+- **class-variance-authority** - Variant styles
+- **csv-parser** - CSV import for books
+- **sharp** - Image optimization
+
+### **Testing**
+
+- **Vitest 3.2.3** - Unit/Integration tests
+- **Playwright 1.56.1** - End-to-end tests
+- **@testing-library/react** - Component testing
+
+### **Development Tools**
+
+- **ESLint** - Linting
+- **Prettier** - Code formatting
+- **cross-env** - Cross-platform env variables
+
+## 🗂️ Prosjektstruktur
+
+## 🔧 Scripts
+
+```bash
+# Utvikling
+pnpm dev                # Start dev server
+pnpm devsafe            # Reset .next og start dev
+
+# Bygging
+pnpm build              # Build for produksjon
+pnpm start              # Kjør produksjonsserver
+
+# Testing
+pnpm test               # Kjør alle tester
+pnpm test:e2e           # Playwright E2E tests
+pnpm test:int           # Vitest integration tests
+
+# Payload
+pnpm payload            # Payload CLI
+pnpm generate:types     # Generer TypeScript types
+pnpm generate:importmap # Generer import map
+
+# Kode kvalitet
+pnpm lint               # Kjør ESLint
+```
+
+## 🗄️ Collections
+
+### **Users**
+
+- Roller: `admin`, `customer`
+- Autentisering med JWT
+- HTTP-only cookies for sikkerhet
+
+### **Books**
+
+- Tittel, forfatter, ISBN, pris, lager
+- Sjangre: fiction, crime, fantasy, scifi, romance, thriller, biography, history, children, youth, skrekk, mythology
+- Innbinding: pocket, hardcover, audiobook, ebook
+- Språk: norwegian, english, other
+- Signert/usignert
+- Tilstand: like-new, very-good, good, acceptable
+
+### **Media**
+
+- Opplasting av bilder
+- har ikke blitt brukt
+
+## 🎨 Features
+
+### **Frontend**
+
+- ✅ Bokoversikt med søk og filtrering
+- ✅ Detaljert bokvisning
+- ✅ Handlekurv (localStorage)
+- ✅ Brukerautentisering
+- ✅ Responsive design (mobile-first)
+
+### **Admin Dashboard**
+
+- ✅ Legg til/rediger/slett bøker
+- ✅ Brukerhåndtering
+- ✅ Ordreadministrasjon
+- ✅ CSV import av bøker
+
+### **API**
+
+- ✅ RESTful endpoints via Payload
+- ✅ Server Actions for data mutations
+- ✅ Type-safe med TypeScript
+- ✅ Sentraliserte API utilities (`src/lib/api.ts`)
+
+## 🚢 Deploy
 
 // logg:
 

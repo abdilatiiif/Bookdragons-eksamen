@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Heart, ShoppingCart, Minus, Plus, ArrowLeft, Check } from 'lucide-react'
+import { Heart, ShoppingCart, ArrowLeft, Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'

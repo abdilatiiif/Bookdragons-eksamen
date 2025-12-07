@@ -3,7 +3,7 @@ import { Heart, ShoppingCart } from 'lucide-react'
 function Book({ book }: { book: any }) {
   // random bilde må hentes fra picsum.photos basert på bok id eller isbn eller tittel
 
-  const seed = encodeURIComponent(book?.id ?? book?.isbn ?? book?.title ?? String(Math.random()))
+  const seed = encodeURIComponent(book?.id ?? book?.isbn ?? book?.title ?? String(Math.random())) // random generert test
   const imgSrc = `https://picsum.photos/seed/${seed}/400/500`
 
   function handleClick() {

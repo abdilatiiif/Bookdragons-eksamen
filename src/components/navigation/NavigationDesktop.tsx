@@ -11,8 +11,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import { Input } from '@/components/ui/input'
-import { Car, Flame, Plane, Sailboat } from 'lucide-react'
+
 import SearchInputNav from './SearchInputNav'
 
 export function NavigationDesktop() {

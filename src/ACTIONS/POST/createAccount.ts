@@ -28,7 +28,6 @@ export async function createAccount(data: CreateAccountData): Promise<CreateAcco
         password: data.password,
         name: data.name,
         phone: data.phone || '',
-        address: data.address || '',
         role: 'customer',
       },
     })

@@ -36,7 +36,7 @@ export default function CartPage() {
     setIsHydrated(true)
   }, [])
 
-  // Save cart to localStorage (only after hydration)
+  // Save cart to localStorage (only after hydration) // eroor fikset? --- IGNORE ---
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem('cart', JSON.stringify(cartItems))
@@ -62,10 +62,8 @@ export default function CartPage() {
       return
     }
 
-    // Find the item to get its stock limit
     const item = cartItems.find((i) => i.bookId === bookId)
     if (item && quantity > item.stock) {
-      // Prevent quantity exceeding available stock
       setCartItems(cartItems.map((i) => (i.bookId === bookId ? { ...i, quantity: item.stock } : i)))
       return
     }
@@ -84,7 +82,6 @@ export default function CartPage() {
   const handleCheckout = async () => {
     setLoading(true)
     try {
-      // Get current user
       const cookies = document.cookie.split(';')
       const userCookie = cookies.find((c) => c.trim().startsWith('currentUser='))
       if (!userCookie) {
@@ -95,7 +92,6 @@ export default function CartPage() {
       const userData = JSON.parse(decodeURIComponent(userCookie.split('=')[1]))
       const userId = userData.id
 
-      // Create order with cart items using server action
       const orderData = {
         customer: userId,
         items: cartItems.map((item) => ({
@@ -110,7 +106,6 @@ export default function CartPage() {
       const result = await putOrder(orderData)
 
       if (result.success) {
-        // Clear cart and redirect
         setCartItems([])
         localStorage.removeItem('cart')
         window.dispatchEvent(new CustomEvent('cartUpdated', { detail: [] }))
