@@ -31,7 +31,7 @@ function MainSection() {
               </p>
               <p className="text-gray-300 mb-6">
                 Møt den populære krimforfatteren for signering og samtale om hennes nye bok
-                "Mysteriet på slottet"
+                &quot;Mysteriet på slottet&quot;
               </p>
               <button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2 group-hover:gap-3">
                 <Link href="/events">Se alle arrangementer</Link>
